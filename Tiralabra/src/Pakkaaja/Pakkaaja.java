@@ -37,16 +37,23 @@ public class Pakkaaja {
         return aakkosto;
         
     }
-    public static Node rakennaPuu(HashMap<Character, Integer> aakkosto){
-        PriorityQueue<Node> keko = new PriorityQueue<Node>();
+    /**
+     * Metodi rakentaa annetuista kirjainten esiintymismääristä puun,
+     * josta voi selvittää kunkin merkin Huffman-koodin
+     * 
+     * @param Merkkien esiintymistiheydet
+     * @return sanakirja puumuodossa
+     */
+    public static Solmu rakennaPuu(HashMap<Character, Integer> aakkosto){
+        PriorityQueue<Solmu> keko = new PriorityQueue<Solmu>();
         for (char s : aakkosto.keySet()) {
-            Node n = new Node(s, aakkosto.get(s));
+            Solmu n = new Solmu(s, aakkosto.get(s));
             keko.add(n);
         }
         while (keko.size() > 1){
-            Node node1 = keko.poll();
-            Node node2 = keko.poll();
-            Node uusi = new Node('_', node1.yleisyys+node2.yleisyys);
+            Solmu node1 = keko.poll();
+            Solmu node2 = keko.poll();
+            Solmu uusi = new Solmu('_', node1.yleisyys+node2.yleisyys);
             uusi.vasen = node1;
             uusi.oikea = node2;
             keko.add(uusi);
@@ -55,7 +62,12 @@ public class Pakkaaja {
         
         return keko.poll();
     }
-    public static void tulostaMerkit(Node node, String merkkijono){
+    /**
+     * Metodi debuggausta varten.
+     * @param node
+     * @param merkkijono 
+     */
+    public static void tulostaMerkit(Solmu node, String merkkijono){
         if(node.oikea == null){
             System.out.println(node.merkki + ": "+merkkijono);
             return;
@@ -64,10 +76,15 @@ public class Pakkaaja {
         tulostaMerkit(node.oikea, merkkijono+"0");
         
     }
+    public static HashMap<Character, String> luoSanakirja(String tiedosto){
+        
+        return null;        
+    }
     public static void main(String[] args) {
         HashMap<Character, Integer> aakkosto = lueTiedosto("testi.txt");
         
-        Node puu = rakennaPuu(aakkosto);
+        Solmu puu = rakennaPuu(aakkosto);
         tulostaMerkit(puu, "");
     }
+    
 }

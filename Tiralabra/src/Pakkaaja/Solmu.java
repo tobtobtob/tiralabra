@@ -8,14 +8,14 @@ package Pakkaaja;
  *
  * @author topi
  */
-public class Node implements Comparable<Node> {
+public class Solmu implements Comparable<Solmu> {
     
-    Node vasen;
-    Node oikea;
+    Solmu vasen;
+    Solmu oikea;
     char merkki;
     int yleisyys;
 
-    public Node(char merkki, int yleisyys) {
+    public Solmu(char merkki, int yleisyys) {
         
         this.merkki = merkki;
         this.yleisyys = yleisyys;
@@ -23,7 +23,7 @@ public class Node implements Comparable<Node> {
     
 
     @Override
-    public int compareTo(Node o) {
+    public int compareTo(Solmu o) {
         return this.yleisyys-o.yleisyys;
     }
     public String toString(){
