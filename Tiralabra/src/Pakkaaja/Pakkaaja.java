@@ -5,6 +5,7 @@
 package Pakkaaja;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,24 +68,31 @@ public class Pakkaaja {
      * @param node
      * @param merkkijono 
      */
-    public static void tulostaMerkit(Solmu node, String merkkijono){
+    public static void luoSanakirja(Solmu node, String merkkijono, HashMap<Character, String> sanakirja){
         if(node.oikea == null){
             System.out.println(node.merkki + ": "+merkkijono);
+            sanakirja.put(node.merkki, merkkijono);
             return;
         }
-        tulostaMerkit(node.vasen, merkkijono+"1");
-        tulostaMerkit(node.oikea, merkkijono+"0");
+        luoSanakirja(node.vasen, merkkijono+"1", sanakirja);
+        luoSanakirja(node.oikea, merkkijono+"0", sanakirja);
         
     }
-    public static HashMap<Character, String> luoSanakirja(String tiedosto){
-        
-        return null;        
-    }
+    
     public static void main(String[] args) {
         HashMap<Character, Integer> aakkosto = lueTiedosto("testi.txt");
         
-        Solmu puu = rakennaPuu(aakkosto);
-        tulostaMerkit(puu, "");
+        Solmu sanakirjapuu = rakennaPuu(aakkosto);
+        HashMap<Character, String> sanakirja = new HashMap<Character, String>();
+        luoSanakirja(sanakirjapuu, "", sanakirja);
+        Kirjoittaja kirjoittaja;
+        try {
+            kirjoittaja = new Kirjoittaja("pakattuTesti", sanakirja);
+        
+            kirjoittaja.kirjoitaTiedosto("testi.txt");
+        } catch (IOException ex) {
+            Logger.getLogger(Pakkaaja.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
