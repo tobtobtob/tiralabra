@@ -20,7 +20,7 @@ public class Kirjoittaja {
     FileOutputStream fos;
     String tiedostonNimi;
     HashMap<Character, String> sanakirja;
-    byte puskuri;
+    int puskuri;
     int indeksi;
     
     public Kirjoittaja(String tiedostonNimi, HashMap<Character, String> sanakirja) throws IOException{
@@ -32,7 +32,7 @@ public class Kirjoittaja {
     public void kirjoitaTiedosto(String tiedosto) throws FileNotFoundException, IOException{
         Scanner s = new Scanner(new File(tiedosto));
         s.useDelimiter("");
-        indeksi = 8;
+        indeksi = 7;
         while(s.hasNext()){
             kirjoitaMerkki(s.next());
         }
@@ -43,21 +43,22 @@ public class Kirjoittaja {
     }
 
     private void kirjoitaMerkki(String next) throws IOException {
-        String koodi = sanakirja.get(next);
+        String koodi = sanakirja.get(next.charAt(0));
         
-        for (char c : next.toCharArray()) {
+        for (char c : koodi.toCharArray()) {
             kirjoitaBitti(c);
         }
     }
 
     private void kirjoitaBitti(char c) throws IOException {
         if(c == '1'){
-            puskuri += (int) Math.pow(2, indeksi);
+            puskuri |=  (1<<indeksi);
         }
         indeksi--;
         if(indeksi < 0){
             fos.write(puskuri);
-            indeksi = 8;
+            puskuri = 0;
+            indeksi = 7;
         }
     }
     

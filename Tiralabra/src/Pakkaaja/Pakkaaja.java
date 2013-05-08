@@ -45,16 +45,16 @@ public class Pakkaaja {
      * @param Merkkien esiintymistiheydet
      * @return sanakirja puumuodossa
      */
-    public static Solmu rakennaPuu(HashMap<Character, Integer> aakkosto){
-        PriorityQueue<Solmu> keko = new PriorityQueue<Solmu>();
+    public static Node rakennaPuu(HashMap<Character, Integer> aakkosto){
+        PriorityQueue<Node> keko = new PriorityQueue<Node>();
         for (char s : aakkosto.keySet()) {
-            Solmu n = new Solmu(s, aakkosto.get(s));
+            Node n = new Node(s, aakkosto.get(s));
             keko.add(n);
         }
         while (keko.size() > 1){
-            Solmu node1 = keko.poll();
-            Solmu node2 = keko.poll();
-            Solmu uusi = new Solmu('_', node1.yleisyys+node2.yleisyys);
+            Node node1 = keko.poll();
+            Node node2 = keko.poll();
+            Node uusi = new Node('_', node1.yleisyys+node2.yleisyys);
             uusi.vasen = node1;
             uusi.oikea = node2;
             keko.add(uusi);
@@ -68,7 +68,7 @@ public class Pakkaaja {
      * @param node
      * @param merkkijono 
      */
-    public static void luoSanakirja(Solmu node, String merkkijono, HashMap<Character, String> sanakirja){
+    public static void luoSanakirja(Node node, String merkkijono, HashMap<Character, String> sanakirja){
         if(node.oikea == null){
             System.out.println(node.merkki + ": "+merkkijono);
             sanakirja.put(node.merkki, merkkijono);
@@ -82,7 +82,7 @@ public class Pakkaaja {
     public static void main(String[] args) {
         HashMap<Character, Integer> aakkosto = lueTiedosto("testi.txt");
         
-        Solmu sanakirjapuu = rakennaPuu(aakkosto);
+        Node sanakirjapuu = rakennaPuu(aakkosto);
         HashMap<Character, String> sanakirja = new HashMap<Character, String>();
         luoSanakirja(sanakirjapuu, "", sanakirja);
         Kirjoittaja kirjoittaja;
@@ -90,6 +90,15 @@ public class Pakkaaja {
             kirjoittaja = new Kirjoittaja("pakattuTesti", sanakirja);
         
             kirjoittaja.kirjoitaTiedosto("testi.txt");
+        } catch (IOException ex) {
+            Logger.getLogger(Pakkaaja.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Purkaja p = new Purkaja();
+        p.setSanakirja(sanakirjapuu);
+        try {
+            p.puraTiedosto("pakattuTesti", "purettuTesti.txt");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Pakkaaja.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Pakkaaja.class.getName()).log(Level.SEVERE, null, ex);
         }
