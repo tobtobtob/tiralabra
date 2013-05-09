@@ -109,6 +109,7 @@ public class Pakkaaja {
         if(node.oikea == null){
 //            System.out.println(node.merkki + ": "+merkkijono);
             sanakirja.put(node.merkki, merkkijono);
+            System.out.println(node.merkki + ": " +merkkijono);
             return;
         }
         luoSanakirja(node.vasen, merkkijono+"1", sanakirja);
