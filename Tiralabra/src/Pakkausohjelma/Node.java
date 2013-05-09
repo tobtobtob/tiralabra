@@ -1,13 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Pakkausohjelma;
 
-/**
- *
- * @author topi
- */
 public class Node implements Comparable<Node> {
     
     Node vasen;
@@ -26,6 +19,7 @@ public class Node implements Comparable<Node> {
     public int compareTo(Node o) {
         return this.yleisyys-o.yleisyys;
     }
+    @Override
     public String toString(){
         return "("+merkki + " : "+yleisyys + ") ";
     }

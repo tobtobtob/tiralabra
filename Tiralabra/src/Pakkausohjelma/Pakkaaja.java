@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Pakkausohjelma;
 
 import java.io.File;
@@ -14,10 +11,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author topi
- */
 public class Pakkaaja {
     
     FileOutputStream fos;
@@ -57,9 +50,9 @@ public class Pakkaaja {
         while(s.hasNext()){
             kirjoitaMerkki(s.next());
         }
-        if(puskuri > 0){
-            fos.write(puskuri);
-        }
+        
+        fos.write(puskuri);
+        
         fos.close();
     }
     public HashMap<Character, Integer> lueTiedosto(String tiedosto){
@@ -127,7 +120,7 @@ public class Pakkaaja {
                 fw.write('@');
                
             }
-            System.out.println(c);
+            
             eka = false;
             fw.write(c);
             fw.write('#');

@@ -1,14 +1,11 @@
 
 package Pakkausohjelma;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -34,7 +31,7 @@ public class Purkaja {
         HashMap<Character, Integer> aakkostoTaulu = lueAakkosto(aakkosto);
         sanakirja = huff.rakennaPuu(aakkostoTaulu);
         puskuri =  (byte) s.read();
-        indeksi = (int) Math.pow(2, 7);
+        indeksi = 1 << 7;
         fw = new FileWriter(new File(uusinimi));
         
         while(s.available()> 0){
@@ -44,7 +41,7 @@ public class Purkaja {
                    puskuri = (byte) s.read();
                    indeksi = 7;
                }
-               if(((int)Math.pow(2, indeksi) & puskuri) == 0){
+               if(((1<< indeksi) & puskuri) == 0){
                    node = node.oikea;                   
                }
                else{

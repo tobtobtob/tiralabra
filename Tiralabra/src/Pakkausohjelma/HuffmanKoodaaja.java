@@ -1,16 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Pakkausohjelma;
 
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
-/**
- *
- * @author topi
- */
 public class HuffmanKoodaaja {
 
     /**
