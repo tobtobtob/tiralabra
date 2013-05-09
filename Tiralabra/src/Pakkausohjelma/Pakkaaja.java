@@ -25,7 +25,12 @@ public class Pakkaaja {
         huff = new HuffmanKoodaaja();
     }
     
-    
+    /**
+     * Pakkaajan päämetodi, joka alustaa oliomuuttujat, ja kutsuu muut metodit.
+     * @param vanhaNimi
+     * @param uusiNimi
+     * @throws FileNotFoundException 
+     */
     public void pakkaaTiedosto(String vanhaNimi, String uusiNimi) throws FileNotFoundException{
         fos = new FileOutputStream(uusiNimi);
         tiedostonNimi = uusiNimi;
@@ -42,8 +47,16 @@ public class Pakkaaja {
             Logger.getLogger(Pakkausohjelma.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    /**
+     * Kirjoittaa annetun tiedoston huffman-koodattuna lukien merkki kerrallaan
+     * pakattavaa tiedostoa.
+     * 
+     * @param tiedosto pakattava tiedosto
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public void kirjoitaTiedosto(String tiedosto) throws FileNotFoundException, IOException{
-        kirjoitaSanakirjaTiedostoon();
+        kirjoitaAakkostoTiedostoon();
         Scanner s = new Scanner(new File(tiedosto));
         s.useDelimiter("");
         indeksi = 7;
@@ -55,6 +68,12 @@ public class Pakkaaja {
         
         fos.close();
     }
+    /**
+     * Lukee tiedoston läpi kirjaten jokaisen merkin esiintymiskerrat 
+     * hajautustauluun.
+     * @param tiedosto pakattava tiedosto
+     * @return 
+     */
     public HashMap<Character, Integer> lueTiedosto(String tiedosto){
         
         aakkosto = new HashMap<Character, Integer>();
@@ -79,9 +98,12 @@ public class Pakkaaja {
         
     }
     /**
-     * Metodi debuggausta varten.
-     * @param node
-     * @param merkkijono 
+     * rekursiivinen metodi luo annetusta puumuotoisesta aakkostosta hajautustaulun, joka sisältää
+     * merkkien yleisyydet pakattavassa tiedostossa.
+     * 
+     * @param node merkkien yleisyydet
+     * @param merkkijono tyhjä merkkijono
+     * @param sanakirja aluksi tyhjä hajautustaulu
      */
     public  void luoSanakirja(Node node, String merkkijono, HashMap<Character, String> sanakirja){
         if(node.oikea == null){
@@ -93,14 +115,25 @@ public class Pakkaaja {
         luoSanakirja(node.oikea, merkkijono+"0", sanakirja);
         
     }
-    private void kirjoitaMerkki(String next) throws IOException {
-        String koodi = sanakirja.get(next.charAt(0));
+    /**
+     * Kirjoittaa annetun merkin huffman-koodattuna tiedostoon. 
+     * @param merkki
+     * @throws IOException 
+     */
+    private void kirjoitaMerkki(String merkki) throws IOException {
+        String koodi = sanakirja.get(merkki.charAt(0));
         
         for (char c : koodi.toCharArray()) {
             kirjoitaBitti(c);
         }
     }
-
+    /**
+     * Metodi kirjoittaa merkkimuodossa annetun bitin puskuriin, ja kirjoittaa 
+     * puskurin tiedostoon, jos se on täyttynyt.
+     * 
+     * @param c bitti merkkimuodossa
+     * @throws IOException 
+     */
     private void kirjoitaBitti(char c) throws IOException {
         if(c == '1'){
             puskuri |=  (1<<indeksi);
@@ -112,7 +145,12 @@ public class Pakkaaja {
             indeksi = 7;
         }
     }
-    public void kirjoitaSanakirjaTiedostoon() throws IOException{
+    /**
+     * Metodi kirjoittaa erillisen tiedoston, joka sisältää pakattavan 
+     * tiedoston merkkien määrät. 
+     * @throws IOException 
+     */
+    public void kirjoitaAakkostoTiedostoon() throws IOException{
         FileWriter fw = new FileWriter("aakkosto.txt");
         boolean eka = true;
         for (char c : aakkosto.keySet()) {
