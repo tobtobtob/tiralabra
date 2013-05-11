@@ -88,7 +88,7 @@ public class Purkaja {
                     jono.add(oikea);
                 }
             }
-            System.out.println("homokalja");
+            
         }
         return puut;
     }
