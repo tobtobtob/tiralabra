@@ -1,0 +1,863 @@
+
+package Pakkausohjelma;
+
+import Pakkausohjelma.tietorakenteet.Node;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Pakkaaja {
+    
+    FileOutputStream fos;
+    String tiedostonNimi;
+    HashMap<Character, String> sanakirja;
+    byte puskuri;
+    int indeksi;
+    HuffmanKoodaaja huff;
+    HashMap<Character, Integer> aakkosto;
+
+    public Pakkaaja() {
+        huff = new HuffmanKoodaaja();
+    }
+    
+    /**
+     * Pakkaajan päämetodi, joka alustaa oliomuuttujat, ja kutsuu muut metodit.
+     * @param vanhaNimi
+     * @param uusiNimi
+     * @throws FileNotFoundException 
+     */
+    public void pakkaaTiedosto(String vanhaNimi, String uusiNimi) throws FileNotFoundException{
+        fos = new FileOutputStream(uusiNimi);
+        tiedostonNimi = uusiNimi;
+        HashMap<Character, Integer> aakkosto = lueTiedosto(vanhaNimi);        
+        Node sanakirjapuu = huff.rakennaPuu(aakkosto);
+        sanakirja = new HashMap<>();
+        luoSanakirja(sanakirjapuu, "", sanakirja);
+        
+        try {
+            
+        
+            kirjoitaTiedosto(vanhaNimi);
+        } catch (IOException ex) {
+            Logger.getLogger(Pakkausohjelma.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    /**
+     * Kirjoittaa annetun tiedoston huffman-koodattuna lukien merkki kerrallaan
+     * pakattavaa tiedostoa.
+     * 
+     * @param tiedosto pakattava tiedosto
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    public void kirjoitaTiedosto(String tiedosto) throws FileNotFoundException, IOException{
+        kirjoitaAakkostoTiedostoon();
+        Scanner s = new Scanner(new File(tiedosto));
+        s.useDelimiter("");
+        indeksi = 7;
+        while(s.hasNext()){
+            kirjoitaMerkki(s.next());
+        }
+        
+        fos.write(puskuri);
+        
+        fos.close();
+    }
+    /**
+     * Lukee tiedoston läpi kirjaten jokaisen merkin esiintymiskerrat 
+     * hajautustauluun.
+     * @param tiedosto pakattava tiedosto
+     * @return 
+     */
+    public HashMap<Character, Integer> lueTiedosto(String tiedosto){
+        
+        aakkosto = new HashMap<>();
+        Scanner s;
+        try {
+  
+            s = new Scanner(new File(tiedosto));
+        s.useDelimiter("");
+        
+        while (s.hasNext()){
+            char c = s.next().charAt(0);
+            if(!aakkosto.containsKey(c)){
+                aakkosto.put(c, 1);
+            }
+            else{
+                aakkosto.put(c, aakkosto.get(c)+1);
+            }
+        }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Pakkausohjelma.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return aakkosto;
+        
+    }
+    /**
+     * rekursiivinen metodi luo annetusta puumuotoisesta aakkostosta hajautustaulun, joka sisältää
+     * merkkien yleisyydet pakattavassa tiedostossa.
+     * 
+     * @param node merkkien yleisyydet
+     * @param merkkijono tyhjä merkkijono
+     * @param sanakirja aluksi tyhjä hajautustaulu
+     */
+    public  void luoSanakirja(Node node, String merkkijono, HashMap<Character, String> sanakirja){
+        if(node.oikea == null){
+            sanakirja.put(node.merkki, merkkijono);
+//            System.out.println(node.merkki + ": " +merkkijono);
+            return;
+        }
+        luoSanakirja(node.vasen, merkkijono+"1", sanakirja);
+        luoSanakirja(node.oikea, merkkijono+"0", sanakirja);
+        
+    }
+    /**
+     * Kirjoittaa annetun merkin huffman-koodattuna tiedostoon. 
+     * @param merkki
+     * @throws IOException 
+     */
+    private void kirjoitaMerkki(String merkki) throws IOException {
+        String koodi = sanakirja.get(merkki.charAt(0));
+        
+        for (char c : koodi.toCharArray()) {
+            kirjoitaBitti(c);
+        }
+    }
+    /**
+     * Metodi kirjoittaa merkkimuodossa annetun bitin puskuriin, ja kirjoittaa 
+     * puskurin tiedostoon, jos se on täyttynyt.
+     * 
+     * @param c bitti merkkimuodossa
+     * @throws IOException 
+     */
+    private void kirjoitaBitti(char c) throws IOException {
+        if(c == '1'){
+            puskuri |=  (1<<indeksi);
+        }
+        indeksi--;
+        if(indeksi < 0){
+            fos.write(puskuri);
+            puskuri = 0;
+            indeksi = 7;
+        }
+    }
+    /**
+     * Metodi kirjoittaa erillisen tiedoston, joka sisältää pakattavan 
+     * tiedoston merkkien määrät. 
+     * @throws IOException 
+     */
+    public void kirjoitaAakkostoTiedostoon() throws IOException{
+        FileWriter fw = new FileWriter("aakkosto.txt");
+        boolean eka = true;
+        for (char c : aakkosto.keySet()) {
+            if(!eka){
+                fw.write('@');
+               
+            }
+            
+            eka = false;
+            fw.write(c);
+            fw.write('#');
+            fw.write(aakkosto.get(c)+"");
+            
+            
+        }
+        fw.close();
+    }
+    
+    
+}
+
+package Pakkausohjelma;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Pakkausohjelma {
+
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        System.out.println("Valitse komento (pakkaa | pura)");
+        String komento = s.nextLine();
+        if("testi".equals(komento)){
+            ajaTesti();
+        }
+        else if ("pakkaa".equals(komento)){
+            System.out.println("anna pakattavan tiedoston nimi:");
+            String pakattava = s. nextLine();
+            System.out.println("anna pakatun tiedoston nimi:");
+            String pakattu = s.nextLine();
+            try {
+                new Pakkaaja().pakkaaTiedosto(pakattava, pakattu);
+            } catch (FileNotFoundException ex) {
+                System.out.println("pieleen män");
+            }
+        }
+        else if("pura".equals(komento)){
+            System.out.println("anna purettavan tiedoston nimi:");
+            String purettava = s. nextLine();
+            System.out.println("anna puretun tiedoston nimi:");
+            String purettu = s.nextLine();
+            try {
+                new Purkaja().puraTiedosto(purettava, purettu, "aakkosto.txt");
+            } catch (Exception ex) {
+                System.out.println("piäleen män");
+            } 
+        }
+        else{
+            System.out.println("virheellinen komento");
+        }
+    }
+
+    private static void ajaTesti() {
+        try {
+            Pakkaaja pa = new Pakkaaja();
+            pa.pakkaaTiedosto("testi.txt", "pakattuTesti");
+            Purkaja p = new Purkaja();
+            p.puraTiedosto("pakattuTesti", "purettu.txt", "aakkosto.txt");
+        } catch (IOException ex) {
+            System.out.println("fail");
+        }
+    }
+    
+}
+
+package Pakkausohjelma;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Scanner;
+
+
+
+public class Purkaja {
+    
+    private Node sanakirja;
+    
+    private FileWriter fw;
+    private byte puskuri;
+    private int indeksi;
+    private HuffmanKoodaaja huff;
+
+    public Purkaja() {
+        huff = new HuffmanKoodaaja();
+    }
+
+    
+    public void puraTiedosto(String tiedosto, String uusinimi, String aakkosto) throws FileNotFoundException, IOException{
+        FileInputStream s = new FileInputStream(new File(tiedosto));
+        Node node;
+        HashMap<Character, Integer> aakkostoTaulu = lueAakkosto(aakkosto);
+        sanakirja = huff.rakennaPuu(aakkostoTaulu);
+        puskuri =  (byte) s.read();
+        indeksi = 1 << 7;
+        fw = new FileWriter(new File(uusinimi));
+        
+        while(s.available()> 0){
+           node = sanakirja;
+           while(node.oikea != null){
+               if(indeksi<0){
+                   puskuri = (byte) s.read();
+                   indeksi = 7;
+               }
+               if(((1<< indeksi) & puskuri) == 0){
+                   node = node.oikea;                   
+               }
+               else{
+                   node = node.vasen;                   
+               }
+               indeksi--;
+               
+           }
+           fw.write(node.merkki);
+            
+        }
+        fw.close();
+    }
+    public HashMap<Character, Integer> lueAakkosto(String aakkosto) throws FileNotFoundException{
+        HashMap<Character, Integer> aakkostoTaulu = new HashMap<Character, Integer>();
+        Scanner s = new Scanner(new File(aakkosto));
+        String kaikki = "";
+        while(s.hasNext()){
+            kaikki += s.nextLine();
+        }
+        String[] taulu1 = kaikki.split("@");
+        for (String string : taulu1) {
+            if("".equals(string)){
+                continue;
+            }
+            String[] taulu2 = string.split("#");
+            
+            if("".equals(taulu2[0])){
+               
+                aakkostoTaulu.put('\n', Integer.parseInt(taulu2[1]));
+                continue;
+            }
+            aakkostoTaulu.put(taulu2[0].charAt(0), Integer.parseInt(taulu2[1]));
+        }
+        return aakkostoTaulu;
+    }
+}
+package Pakkausohjelma;
+
+import Pakkausohjelma.tietorakenteet.Node;
+import java.util.HashMap;
+import java.util.PriorityQueue;
+
+public class HuffmanKoodaaja {
+
+    /**
+     * Metodi rakentaa annetusta kirjainten esiintymismäärät
+     * sisältävästä hajautustaulusta puun,
+     * josta voi selvittää kunkin merkin Huffman-koodin
+     *
+     * @param Merkkien esiintymistiheydet
+     * @return sanakirja puumuodossa
+     */
+    public Node rakennaPuu(HashMap<Character, Integer> aakkosto) {
+        PriorityQueue<Node> keko = new PriorityQueue<Node>();
+        for (char s : aakkosto.keySet()) {
+            Node n = new Node(s, aakkosto.get(s));
+            keko.add(n);
+        }
+        while (keko.size() > 1) {
+            Node node1 = keko.poll();
+            Node node2 = keko.poll();
+            Node uusi = new Node('_', node1.yleisyys + node2.yleisyys);
+            uusi.vasen = node1;
+            uusi.oikea = node2;
+            keko.add(uusi);
+        }
+        return keko.poll();
+    }
+    
+}
+package tetris;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import tetris.gui.Paivitettava;
+import tetris.logiikka.*;
+import tetris.logiikka.palikat.*;
+import tetris.tuloslista.Tuloslista;
+/**
+* Ohjain hallitsee pelilogiikkaa ohjaamalla putoavaa palikkaa ja poistamalla
+* täydet rivit. Pelitilanteen muuttuessa ohjain päivittää käyttöliittymän.
+*/
+public class Ohjain {
+    /**
+* tippuva palikka, jota pelaaja ohjaa nuolinäppäimillä
+*/
+    private Palikka aktiivinen;
+    /**
+* Siirtojen mahdollisuudet tarkastava ruudukko
+*/
+    private Ruudukko ruudukko;
+    /**
+* Lista jo tippuneista palikoista
+*/
+    private ArrayList<Palikka> palikat;
+    /**
+* pelialueen leveys ruuduissa
+*/
+    private int leveys;
+    /**
+* pelin pistelaskuri
+*/
+    private Pistelaskuri pistelaskuri;
+    /**
+* Kello, joka kutsuu ohjainta tiputtamaan aktiivista palikkaa
+*/
+    private Kello kello;
+    /**
+* Lista päivitettävistä käyttöliittymäkomponenteista
+*/
+    private List<Paivitettava> paivitettavat;
+    /**
+* jos true, peli on käynnissä, jos false, peli on loppunut tai tauolla
+*/
+    private boolean kaynnissa;
+    /**
+* tuloslistaan tallennetaan ja sieltä luetaan ennätykset
+*/
+    private Tuloslista tuloslista;
+    /**
+* pelinLoppu on hetkellinen tila, joka on käyttöliittymälle merkki tulosten
+* kirjaamis -ikkunan avaamisesta.
+*/
+    private boolean pelinLoppu;
+    /**
+* peliOhi on tila, josta peli voi mennä takaisin käyntiin vain uuden pelin alkaessa.
+*/
+    private boolean peliOhi;
+    /**
+* Luo ohjaimen, joka luo pelilogiikan annteun kokoiselle pelialueelle.
+*
+* @param leveys ruudukon leveys
+* @param korkeus ruudukon korkeus
+*/
+    public Ohjain(int leveys, int korkeus){
+       
+        palikat = new ArrayList<Palikka>();
+        ruudukko = new Ruudukko(leveys, korkeus);
+        pistelaskuri = new Pistelaskuri();
+        this.leveys = leveys;
+        kello = new Kello(this);
+        kello.addActionListener(kello);
+        paivitettavat = new ArrayList<Paivitettava>();
+        tuloslista = new Tuloslista();
+    }
+    /**
+* luo uuden pelin alustaen uuden tippuvan palikan, nollaten pistelaskurin ja
+* tallessa olevat palikat, sekä asettaen pelin tilasta kirjaa pitävät boolean
+* -muuttujat oikein.
+*/
+    public void luoUusiPeli(){
+        
+        pistelaskuri.nollaa();
+        palikat.clear();
+        ruudukko.tyhjenna();
+        aktiivinen = luoSatunnainenPalikka();
+        kaynnissa = true;
+        peliOhi = false;
+        paivitaKayttoliittyma();
+        kello.start();
+        pelinLoppu = false;
+
+    }
+    /**
+* Palauttaa listan pelissä olevista, eli jo tippuneista palikoista.
+* @return
+*/
+    public ArrayList<Palikka> getPalikat() {
+        return palikat;
+    }
+    /**
+* Metodi vaihtaa aktiivisen palikan uuteen, lisäten vanhan aktiivisen palikan
+* palikat sisältävään listaan. Metodi myös lopettaa pelin, jos uusi aktiivinen
+* palikka ei mahdu pelialueelle.
+*/
+    public void vaihdaAktiivinenPalikka() {
+        palikat.add(aktiivinen);
+        
+        ruudukko.paivitaPalikat(palikat);
+        tarkastaTaydetRivit();
+        aktiivinen = luoSatunnainenPalikka();
+        if(!ruudukko.voikoSiirtya(aktiivinen, aktiivinen.getX(), aktiivinen.getY())){
+            kello.stop();
+            aktiivinen = null;
+            pelinLoppu = true;
+            peliOhi = true;
+            kaynnissa = false;
+            paivitaKayttoliittyma();
+            return;
+        }
+        paivitaKayttoliittyma();
+        kello.paivita();
+    }
+    /**
+* Lisää parametrina annetun palikan listaan palikoista.
+* @param palikka
+*/
+    void lisaaPalikka(Palikka palikka) {
+        palikat.add(palikka);
+    }
+    /**
+*Tarkistaa, voiko aktiivinen palikka siirtyä parametrina annettuun
+* suuntaan. Jos voi, metodi siirtää palikkaa annettuun suuntaan.
+*
+* @param suunta
+* @return true, jos siirto toteutettiin, false jos siirtoa ei toteutettu
+*/
+    public boolean siirraPalikkaa(Suunta suunta){
+        
+        if(suunta == Suunta.ALAS){
+            if(ruudukko.voikoSiirtya(aktiivinen, aktiivinen.getX(), aktiivinen.getY()+suunta.getSiirto())){
+                aktiivinen.siirra(suunta);
+                paivitaKayttoliittyma();
+                return true;
+            }
+        }
+        else{
+            if(ruudukko.voikoSiirtya(aktiivinen, aktiivinen.getX()+suunta.getSiirto(), aktiivinen.getY())){
+                aktiivinen.siirra(suunta);
+                paivitaKayttoliittyma();
+                return true;
+                
+            }
+        }
+        return false;
+    }
+    
+    /**
+* Siirtää palikkaa jokaisella kellonlyömällä yhden pykälän alaspäin.
+* Jos siirto ei toteudu, metodi kutsuu uuden aktiivisen palikan luovaa metodia.
+*/
+    public void kelloKay() {
+        
+        if(!siirraPalikkaa(Suunta.ALAS)){
+            vaihdaAktiivinenPalikka();
+        }
+    }
+    /**
+* palauttaa aktiivisen palikan
+* @return aktiivinen palikka
+*/
+    public Palikka getAktiivinen() {
+        return aktiivinen;
+    }
+    
+    /**
+* Palauttaa uuden palikan, joka on yksi seitsemästä mahdollisesta eri
+* palikkatyypistä.
+*
+* @return satunnainen palikka
+*/
+    public Palikka luoSatunnainenPalikka(){
+        
+        int uusi = new Random().nextInt(7);
+        int x = leveys/2-2;
+        int y = 0;
+        
+       switch (uusi){
+           case 0: return new Nelio(x, y);
+           case 1: return new PalikkaJ(x, y);
+           case 2: return new PalikkaL(x, y);
+           case 3: return new PalikkaS(x, y);
+           case 4: return new PalikkaT(x, y);
+           case 5: return new PalikkaZ(x, y);
+           case 6: return new Suora(x, y);
+       }
+        return null;
+           
+    }
+    /**
+* Metodi tarkastaa voiko aktiivinen palikka kääntyä myötäpäivään. Jos
+* mahdollista, palikka käännetään yhden käännöksen verran.
+*/
+    public void kaannaPalikka() {
+        
+        boolean[][] kaannos = aktiivinen.luoKaannos();
+        if(ruudukko.voikoSiirtya(kaannos, aktiivinen.getX(), aktiivinen.getY())){
+            aktiivinen.setRuudukko(kaannos);
+            paivitaKayttoliittyma();
+        }
+    }
+    /**
+* Metodi tarkastaa ruudukkoa apuna käyttäen täydet rivit poistaen ne.
+* Tämän jälkeen poistetaan tyhjät palikat listasta ja päivitetään pistetilanne.
+*/
+    private void tarkastaTaydetRivit() {
+        
+        int poistettavaRivi = ruudukko.palautaTaysiRivi();
+        
+        int poistettujaRiveja = 0;
+        while(poistettavaRivi != -1){
+            for (Palikka palikka : palikat) {
+                palikka.poistaRivi(poistettavaRivi);
+            }
+            ruudukko.tyhjenna();
+            ruudukko.paivitaPalikat(palikat);
+            poistettujaRiveja++;
+            poistettavaRivi = ruudukko.palautaTaysiRivi();
+        }
+        poistaTyhjatPalikat();
+        pistelaskuri.kasvataPisteita(poistettujaRiveja);
+        paivitaKayttoliittyma();
+    }
+    /**
+* Päivittää päivitettävä -rajapinnan toteuttavat käyttöliittymäkomponentit
+*/
+    public void paivitaKayttoliittyma(){
+        for (Paivitettava paivitettava : paivitettavat) {
+            paivitettava.paivita();
+        }
+    }
+    /**
+* lisää päivitettävä -rajapinnan toteuttavan olion päivitettäviin
+* @param p Paivitettava
+*/
+    public void lisaaPaivitettava(Paivitettava p){
+        paivitettavat.add(p);
+    }
+    /**
+* Asettaa aktiiviseksi palikaksi uduen satunnaisen palikan
+*/
+    public void luoAktiivinenPalikka() {
+         aktiivinen = luoSatunnainenPalikka();
+    }
+    /**
+* Palauttaa pistelaskurilta saatavan pistetilanteen
+* @return pisteet
+*/
+    public int getPisteet() {
+        return pistelaskuri.getPisteet();
+    }
+
+    /**
+* Poistaa palikat -listasta tyhjät palikat käyttäen palikan onkoTyhja() -metodia
+*/
+    public void poistaTyhjatPalikat() {
+        for (int i = 0; i < palikat.size(); i++) {
+            
+            if (palikat.get(i).onkoTyhja()){
+                palikat.remove(i);
+                
+            }
+        }
+    }
+    /**
+* Paluttaa pelin tason
+* @return taso
+*/
+    public int getTaso() {
+        return pistelaskuri.getTaso();
+    }
+    /**
+* asettaa käynnissä -muuttujan parametrina annettuun arvoon. jos uusi arvo
+* on false, pysäyttää kellon, jos true, käynnistää kellon.
+* @param kaynnissa
+*/
+    public void setKaynnissa(boolean kaynnissa){
+        
+        this.kaynnissa = kaynnissa;
+        
+        if(!kaynnissa){
+            kello.stop();
+        }
+        else{
+            kello.start();
+        }
+        paivitaKayttoliittyma();
+    }
+    /**
+*
+* @return kaynnissa
+*/
+    public boolean getKaynnissa() {
+        return kaynnissa;
+    }
+    /**
+* Kutsuu tuloslistaa tallentamaan pistetilanteen parametrina annetulle
+* nimimerkille
+*
+* @param nimimerkki Palaajan nimimerkki
+*/
+    public void tallennaPisteet(String nimimerkki) {
+        if(nimimerkki.equals("")){
+            nimimerkki = "anonymous";
+        }
+        tuloslista.kirjoitaTulos(nimimerkki, getPisteet());
+    }
+    /**
+*
+* @return pelinLoppu
+*/
+    public boolean getPelinLoppu() {
+        return pelinLoppu;
+    }
+    /**
+* Palauttaa kymmenen parasta tulosta merkkijonomuodossa.
+* @return tulokset
+*/
+    public String getTulokset(){
+        return tuloslista.getTulokset(10);
+    }
+    /**
+* Asettaa pelinLoppu -muuttujan parametrina annettuun arvoon.
+* @param b
+*/
+    public void setPelinLoppu(boolean b) {
+        pelinLoppu = b;
+    }
+    /**
+* palauttaa peliOhi -muuttujan arvon
+* @return boolean peliOhi
+*/
+    public boolean onkoPeliOhi() {
+        return peliOhi;
+    }
+}
+
+package tetris.logiikka;
+
+import java.util.ArrayList;
+/**
+* Ruudukko pitää kirjaa pelialueella olevista palikoista totuusarvoja sisältävässä
+* taulukossaan. Ruudukon avulla tarkistetaan palikoiden liikkeiden ja käännöksien
+* laillisuus, ja poistetaan täyttyneet rivit.
+*/
+public class Ruudukko {
+    /**
+* Pelialuetta kuvaava ruudukko, johon päivitetään palikat totuusarvoina true,
+* ja tyhjät ruudut totuusarvoina false
+*/
+    private boolean[][] ruudukko;
+    /**
+* pelialueen leveys ruuduissa.
+*/
+    private final int leveys;
+    /**
+* Pelialueen korkeus ruuduissa
+*/
+    private final int korkeus;
+    /**
+* Konstruktori luo annettujen parametrien kokoisen taulukon jossa kaikki
+* alkiot ovat tyhjiä (eli false).
+*
+* @param leveys ruudukon leveys
+* @param korkeus ruudukon korkeus
+*/
+    public Ruudukko(int leveys, int korkeus) {
+        this.leveys = leveys;
+        this.korkeus = korkeus;
+        ruudukko = new boolean[korkeus][leveys];
+    }
+    /**
+* Metodi sijoittaa muuttujaan ruudukko uuden samankokoisen taulukon.
+*/
+    public void tyhjenna(){
+        ruudukko = new boolean[korkeus][leveys];
+    }
+    /**
+* Metodi käy läpi ruudukon rivejä, kunnes löytää rivin, jolla kaikki
+* alkiot ovat "true"
+*
+* @return ensimmäinen metodin löytämä rivi, jolla kaikki alkiot ovat "true"
+*/
+    public int palautaTaysiRivi(){
+        int palikoita;
+        for (int i = 0; i < korkeus; i++) {
+            palikoita = 0;
+            for (int j = 0; j < leveys; j++) {
+                if(ruudukko[i][j]){
+                    palikoita++;
+                }
+            }
+            if(palikoita == leveys){
+                return i;
+            }
+        }
+        return -1;
+    }
+    /**
+* Metodi päivittää ruudukkoon parametrina annetun palikan. Jos palikan
+* ruudukossa on arvo "true", metodi muuttaa ruudukkoon samaan paikkaan arvon
+* true.
+*
+* @param paivitettava palikka, joka päivitetään ruudukkoon.
+*/
+    
+    public void paivitaPalikka(Palikka paivitettava){
+       boolean[][] palikanRuudukko = paivitettava.getRuudukko();
+        
+        for (int i = 0; i < palikanRuudukko.length; i++) {
+            for (int j = 0; j < palikanRuudukko.length; j++) {
+                if(palikanRuudukko[i][j] == true){
+                    ruudukko[paivitettava.getY()+i][paivitettava.getX()+j] = true;
+                }
+                
+            }
+        }
+    }
+    /**
+* Metodi tarkistaa voiko parametrina annettu palikka siirtyä ruutuun (x,y)
+*
+* @param siirrettava palikka, jota siirretään
+* @param x siirryttävän ruudun x-koordinaatti
+* @param y siirryttävän ruudun y-koordinaatti
+* @return true, jos siirto mahdollinen, muuten false
+*/
+    public boolean voikoSiirtya(Palikka siirrettava, int x, int y){
+        
+        return voikoSiirtya(siirrettava.getRuudukko(), x, y);
+    }
+    
+    /**
+* Metodi tarkistaa sopiiko parametrina annettu ruudukko ruudukon paikkaan
+* (x,y).
+*
+* @param palikanRuudukko
+* @param x siirryttävän paikan x-koordinaatti
+* @param y siirryttävän paikan y-koordinaatti
+* @return true, jos ruudukko sopii, muuten false
+*/
+    public boolean voikoSiirtya(boolean[][] palikanRuudukko, int x, int y){
+        if(!onkoRuudukonSisalla(palikanRuudukko, x, y)){
+            return false;
+        }
+        for (int i = 0; i < palikanRuudukko.length; i++) {
+            for (int j = 0; j < palikanRuudukko.length; j++) {
+                if(palikanRuudukko[i][j]&&ruudukko[y+i][x+j]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    /**
+* Metodi tarkistaa, onko parametrina annettu ruudukko tämän ruudukon sisällä.
+* ulkopuolella olevat "false" alkiot eivät vaikuta tulokseen, kunhan kaikki
+* "true" alkiot ovat ruudukon sisällä.
+*
+* @param palikanRuudukko palikan ruudukko
+* @param x tarkastettavan ruudukon x-sijainti
+* @param y tarkastettavan ruudukon y-sijainti
+* @return true, jos ruudukon sisällä, false, jos ulkona.
+*/
+
+    private boolean onkoRuudukonSisalla(boolean[][] palikanRuudukko, int x, int y) {
+        
+
+        for (int i = 0; i < palikanRuudukko.length; i++) {
+            for (int j = 0; j < palikanRuudukko.length; j++) {
+                if(palikanRuudukko[i][j]){
+                    if((x+j <0)||(x+j>=leveys)){
+                        return false;
+                    }
+                    if((y+i<0)||(y+i>=korkeus)){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+        
+    }
+    /**
+* Metodi palauttaa ruudukon totuusarvoja sisältävän taulukon
+* @return ruudukko
+*/
+    public boolean[][] getRuudukko() {
+        return ruudukko;
+    }
+    
+    /**
+* Metodi päivittää parametrina annetut palikat tähän ruudukkoon kutsumalla
+* paivitaPalikka() -metodia yksitellen jokaiselle palikalle.
+*
+* @param palikat ArrayList palikoista, jotka päivitetään ruudukkoon.
+*/
+
+    public void paivitaPalikat(ArrayList<Palikka> palikat) {
+        for (Palikka palikka : palikat) {
+            paivitaPalikka(palikka);
+        }
+    }
+    
+    
+}
+

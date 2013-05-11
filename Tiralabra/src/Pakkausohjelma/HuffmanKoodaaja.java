@@ -15,7 +15,7 @@ public class HuffmanKoodaaja {
      * @return sanakirja puumuodossa
      */
     public Node rakennaPuu(HashMap<Character, Integer> aakkosto) {
-        PriorityQueue<Node> keko = new PriorityQueue<Node>();
+        PriorityQueue<Node> keko = new PriorityQueue<>();
         for (char s : aakkosto.keySet()) {
             Node n = new Node(s, aakkosto.get(s));
             keko.add(n);
@@ -30,5 +30,6 @@ public class HuffmanKoodaaja {
         }
         return keko.poll();
     }
+   
     
 }

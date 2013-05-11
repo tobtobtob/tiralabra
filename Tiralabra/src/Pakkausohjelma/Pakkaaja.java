@@ -7,7 +7,10 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,14 +18,19 @@ public class Pakkaaja {
     
     FileOutputStream fos;
     String tiedostonNimi;
-    HashMap<Character, String> sanakirja;
+    HashMap<Character, HashMap<Character, String>> sanakirja;
     byte puskuri;
     int indeksi;
     HuffmanKoodaaja huff;
-    HashMap<Character, Integer> aakkosto;
+    HashMap<Character, HashMap<Character, Integer>> aakkosto;
+    HashMap<Character, Node> puut;
 
     public Pakkaaja() {
         huff = new HuffmanKoodaaja();
+    }
+
+    public HashMap<Character, Node> getPuut() {
+        return puut;
     }
     
     /**
@@ -34,10 +42,14 @@ public class Pakkaaja {
     public void pakkaaTiedosto(String vanhaNimi, String uusiNimi) throws FileNotFoundException{
         fos = new FileOutputStream(uusiNimi);
         tiedostonNimi = uusiNimi;
-        HashMap<Character, Integer> aakkosto = lueTiedosto(vanhaNimi);        
-        Node sanakirjapuu = huff.rakennaPuu(aakkosto);
+        HashMap<Character, HashMap<Character, Integer>> aakkosto = lueTiedosto(vanhaNimi); 
+        puut = rakennaPuut();
+        
         sanakirja = new HashMap<>();
-        luoSanakirja(sanakirjapuu, "", sanakirja);
+        for (Character c : puut.keySet()) {
+            sanakirja.put(c, new HashMap<Character, String>());
+            luoSanakirja(puut.get(c), "",sanakirja.get(c) );
+        }
         
         try {
             
@@ -56,12 +68,16 @@ public class Pakkaaja {
      * @throws IOException 
      */
     public void kirjoitaTiedosto(String tiedosto) throws FileNotFoundException, IOException{
-        kirjoitaAakkostoTiedostoon();
+        kirjoitaAakkostoTiedostoon(puut);
         Scanner s = new Scanner(new File(tiedosto));
         s.useDelimiter("");
         indeksi = 7;
+        char edellinen = s.next().charAt(0);
+        fos.write(edellinen);
         while(s.hasNext()){
-            kirjoitaMerkki(s.next());
+            char merkki = s.next().charAt(0);
+            kirjoitaMerkki(merkki, edellinen);
+            edellinen = merkki;
         }
         
         fos.write(puskuri);
@@ -74,22 +90,29 @@ public class Pakkaaja {
      * @param tiedosto pakattava tiedosto
      * @return 
      */
-    public HashMap<Character, Integer> lueTiedosto(String tiedosto){
+    public HashMap<Character, HashMap<Character, Integer>> lueTiedosto(String tiedosto){
         
-        aakkosto = new HashMap<Character, Integer>();
+        aakkosto = new HashMap<>();
         Scanner s;
         try {
   
             s = new Scanner(new File(tiedosto));
         s.useDelimiter("");
+        char edellinen = s.next().charAt(0);
         while (s.hasNext()){
+            
             char c = s.next().charAt(0);
-            if(!aakkosto.containsKey(c)){
-                aakkosto.put(c, 1);
+            if(!aakkosto.containsKey(edellinen)){
+                aakkosto.put(edellinen, new HashMap<Character, Integer>());
+                aakkosto.get(edellinen).put(c, 1);
             }
             else{
-                aakkosto.put(c, aakkosto.get(c)+1);
+                if(!aakkosto.get(edellinen).containsKey(c)){
+                    aakkosto.get(edellinen).put(c, 0);
+                }
+                aakkosto.get(edellinen).put(c, aakkosto.get(edellinen).get(c)+1);
             }
+            edellinen = c;
         }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Pakkausohjelma.class.getName()).log(Level.SEVERE, null, ex);
@@ -109,7 +132,7 @@ public class Pakkaaja {
         if(node.oikea == null){
 //            System.out.println(node.merkki + ": "+merkkijono);
             sanakirja.put(node.merkki, merkkijono);
-            System.out.println(node.merkki + ": " +merkkijono);
+//            System.out.println(node.merkki + ": " +merkkijono);
             return;
         }
         luoSanakirja(node.vasen, merkkijono+"1", sanakirja);
@@ -121,11 +144,16 @@ public class Pakkaaja {
      * @param merkki
      * @throws IOException 
      */
-    private void kirjoitaMerkki(String merkki) throws IOException {
-        String koodi = sanakirja.get(merkki.charAt(0));
+    private void kirjoitaMerkki(char merkki, char edellinen) throws IOException {
+        try{
+        String koodi = sanakirja.get(edellinen).get(merkki);
+        
         
         for (char c : koodi.toCharArray()) {
             kirjoitaBitti(c);
+        }
+        }catch(Exception e){
+            System.out.println("nakkimaa");
         }
     }
     /**
@@ -151,23 +179,38 @@ public class Pakkaaja {
      * tiedoston merkkien määrät. 
      * @throws IOException 
      */
-    public void kirjoitaAakkostoTiedostoon() throws IOException{
+    public void kirjoitaAakkostoTiedostoon(HashMap<Character, Node> aakkosto) throws IOException{
         FileWriter fw = new FileWriter("aakkosto.txt");
-        boolean eka = true;
         for (char c : aakkosto.keySet()) {
-            if(!eka){
-                fw.write('@');
-               
-            }
             
-            eka = false;
             fw.write(c);
-            fw.write('#');
-            fw.write(aakkosto.get(c)+"");
-            
-            
+            Queue<Node> jono = new LinkedList<>();
+            jono.add(aakkosto.get(c));
+            while(!jono.isEmpty()){
+                Node n = jono.poll();
+                if(n.merkki == '_'){
+                    fw.write("¤");
+                    jono.add(n.vasen);
+                    jono.add(n.oikea);
+                    
+                }
+                else{
+                fw.write(Character.toString(n.merkki));
+                }
+                
+            }           
         }
         fw.close();
+    }
+
+    private HashMap<Character, Node> rakennaPuut() {
+        HashMap<Character, Node> puut = new HashMap<>();
+        for (Character c : aakkosto.keySet()) {
+            
+            puut.put(c,huff.rakennaPuu(aakkosto.get(c)));
+            
+        }
+        return puut;
     }
     
     
