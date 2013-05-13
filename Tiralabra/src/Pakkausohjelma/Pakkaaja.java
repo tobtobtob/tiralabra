@@ -68,8 +68,11 @@ public class Pakkaaja {
      * @throws IOException 
      */
     public void kirjoitaTiedosto(String tiedosto) throws FileNotFoundException, IOException{
-        kirjoitaAakkostoTiedostoon(puut);
+        String valimerkki = "¤";
+        kirjoitaAakkostoTiedostoon(puut, valimerkki);
         Scanner s = new Scanner(new File(tiedosto));
+        
+        
         s.useDelimiter("");
         indeksi = 7;
         char edellinen = s.next().charAt(0);
@@ -179,7 +182,7 @@ public class Pakkaaja {
      * tiedoston merkkien määrät. 
      * @throws IOException 
      */
-    public void kirjoitaAakkostoTiedostoon(HashMap<Character, Node> aakkosto) throws IOException{
+    public void kirjoitaAakkostoTiedostoon(HashMap<Character, Node> aakkosto, String valimerkki) throws IOException{
         FileWriter fw = new FileWriter("aakkosto.txt");
         for (char c : aakkosto.keySet()) {
             
@@ -188,8 +191,8 @@ public class Pakkaaja {
             jono.add(aakkosto.get(c));
             while(!jono.isEmpty()){
                 Node n = jono.poll();
-                if(n.merkki == '_'){
-                    fw.write("¤");
+                if(n.vasen != null){
+                    fw.write(valimerkki);
                     jono.add(n.vasen);
                     jono.add(n.oikea);
                     

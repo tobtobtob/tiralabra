@@ -33,6 +33,7 @@ public class Purkaja {
     
     public void puraTiedosto(String tiedosto, String uusinimi, String aakkosto) throws FileNotFoundException, IOException{
         FileInputStream s = new FileInputStream(new File(tiedosto));
+        
         Node node;
         sanakirja = luePuut(aakkosto, '¤');
         char edellinen = Character.toChars(s.read())[0];

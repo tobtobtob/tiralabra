@@ -45,7 +45,7 @@ public class Pakkausohjelma {
     private static void ajaTesti() {
         try {
             Pakkaaja pa = new Pakkaaja();
-            pa.pakkaaTiedosto("testitiedostoja/testi.txt", "pakattuTesti");
+            pa.pakkaaTiedosto("testitiedostoja/htmltesti.txt", "pakattuTesti");
             Purkaja p = new Purkaja();
             p.setSanakirja(pa.getPuut());
             p.puraTiedosto("pakattuTesti", "purettu.txt", "aakkosto.txt");
