@@ -39,7 +39,7 @@ public class Pakkausohjelma {
         }
         else{
             System.out.println("virheellinen komento");
-        }
+        }    
     }
     /**
      * testimetodi nopeaa debuggausta varten

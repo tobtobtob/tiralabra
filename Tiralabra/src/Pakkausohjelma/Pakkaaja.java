@@ -77,10 +77,8 @@ public class Pakkaaja {
         s.useDelimiter("");
         indeksi = 7;
         char edellinen = s.next().charAt(0);
-        String ekamerkki = Integer.toBinaryString(edellinen);
-        for (char c : ekamerkki.toCharArray() ) {
-            kirjoitaBitti(c);
-        }
+        
+        fos.write(edellinen);
        
                 
         while(s.hasNext()){
