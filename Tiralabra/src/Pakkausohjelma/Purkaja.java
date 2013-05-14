@@ -39,7 +39,7 @@ public class Purkaja {
         char edellinen = Character.toChars(s.read())[0];
         
         puskuri =  (byte) s.read();
-        indeksi = 1 << 7;
+        indeksi = 7;
         fw = new FileWriter(new File(uusinimi));
          fw.write(edellinen);
         

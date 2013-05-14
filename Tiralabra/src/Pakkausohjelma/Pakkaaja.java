@@ -76,7 +76,12 @@ public class Pakkaaja {
         s.useDelimiter("");
         indeksi = 7;
         char edellinen = s.next().charAt(0);
-        fos.write(edellinen);
+        String ekamerkki = Integer.toBinaryString(edellinen);
+        for (char c : ekamerkki.toCharArray() ) {
+            kirjoitaBitti(c);
+        }
+       
+                
         while(s.hasNext()){
             char merkki = s.next().charAt(0);
             kirjoitaMerkki(merkki, edellinen);
@@ -156,7 +161,8 @@ public class Pakkaaja {
             kirjoitaBitti(c);
         }
         }catch(Exception e){
-            System.out.println("nakkimaa");
+            System.out.println("aa");
+            System.out.println(merkki + " " + edellinen);
         }
     }
     /**
@@ -178,8 +184,11 @@ public class Pakkaaja {
         }
     }
     /**
-     * Metodi kirjoittaa erillisen tiedoston, joka sisältää pakattavan 
-     * tiedoston merkkien määrät. 
+     * Metodi kirjoittaa tiedoston, jossa on kaikki purkamiseen tarvittavat 
+     * koodipuut.
+     * 
+     * @param aakkosto taulu tiedoston aakkostopuista
+     * @param valimerkki merkki, joka ei sisälly tiedoston aakkostoon.
      * @throws IOException 
      */
     public void kirjoitaAakkostoTiedostoon(HashMap<Character, Node> aakkosto, String valimerkki) throws IOException{
