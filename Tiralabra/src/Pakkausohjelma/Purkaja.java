@@ -12,7 +12,10 @@ import java.util.Queue;
 import java.util.Scanner;
 
 
-
+/**
+ * Purkaja vastaa nimensä mukaisesti pakatun tiedoston purkamisesta. 
+ * @author topi
+ */
 public class Purkaja {
     
     private HashMap<Character, Node> sanakirja;
@@ -20,17 +23,23 @@ public class Purkaja {
     private FileWriter fw;
     private byte puskuri;
     private int indeksi;
-    private HuffmanKoodaaja huff;
-
-    public Purkaja() {
-        huff = new HuffmanKoodaaja();
-    }
-
-    public void setSanakirja(HashMap<Character, Node> sanakirja) {
-        this.sanakirja = sanakirja;
-    }
-
     
+    
+    
+    public Purkaja() {
+        
+    }
+
+    /**
+     * Purkajan päämetodi, joka lukee tiedostoa bitti kerrallaan, liikkuen 
+     * samalla edelliseen merkkiin liittyvässä merkkipuussa.
+     * 
+     * @param tiedosto purettava tiedosto
+     * @param uusinimi puretun tiedoston nimi
+     * @param aakkosto aakkostotiedoston nimi. 
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public void puraTiedosto(String tiedosto, String uusinimi, String aakkosto) throws FileNotFoundException, IOException{
         FileInputStream s = new FileInputStream(new File(tiedosto));
         
@@ -65,6 +74,15 @@ public class Purkaja {
         }
         fw.close();
     }
+    /**
+     * Rakentaa hajautustaulun aakkoston merkkeihin liittyvistä huffman-koodipuista.
+     * Lukee aakkoston parametrina annetusta tiedostosta.
+     * 
+     * @param aakkosto tiedosto, jossa on puut koodattuna
+     * @param tyhjaNode välimerkki, jolla tyhjät nodet on merkattu puutiedostossa. 
+     * @return
+     * @throws FileNotFoundException 
+     */
     public HashMap<Character, Node> luePuut(String aakkosto,char tyhjaNode) throws FileNotFoundException{
         HashMap<Character, Node> puut= new HashMap<>();
         Scanner s = new Scanner(new File(aakkosto));
@@ -93,27 +111,4 @@ public class Purkaja {
         }
         return puut;
     }
-//    public HashMap<Character, Integer> lueAakkosto(String aakkosto) throws FileNotFoundException{
-//        HashMap<Character, Integer> aakkostoTaulu = new HashMap<Character, Integer>();
-//        Scanner s = new Scanner(new File(aakkosto));
-//        String kaikki = "";
-//        while(s.hasNext()){
-//            kaikki += s.nextLine();
-//        }
-//        String[] taulu1 = kaikki.split("@");
-//        for (String string : taulu1) {
-//            if("".equals(string)){
-//                continue;
-//            }
-//            String[] taulu2 = string.split("#");
-//            
-//            if("".equals(taulu2[0])){
-//               
-//                aakkostoTaulu.put('\n', Integer.parseInt(taulu2[1]));
-//                continue;
-//            }
-//            aakkostoTaulu.put(taulu2[0].charAt(0), Integer.parseInt(taulu2[1]));
-//        }
-//        return aakkostoTaulu;
-//    }
 }

@@ -3,7 +3,10 @@ package Pakkausohjelma;
 
 import java.util.HashMap;
 import java.util.PriorityQueue;
-
+/**
+ * Huffmankoodaaja on pakkaajan tarvitsema apuluokka puiden rakentamiseen.
+ * @author topi
+ */
 public class HuffmanKoodaaja {
 
     /**

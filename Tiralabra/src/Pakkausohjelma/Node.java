@@ -19,6 +19,10 @@ public class Node implements Comparable<Node> {
     public int compareTo(Node o) {
         return this.yleisyys-o.yleisyys;
     }
+    /**
+     * Metodeja debuggausta varten
+     * @return 
+     */
     @Override
     public String toString(){
         return "("+merkki + " : "+yleisyys + ") ";

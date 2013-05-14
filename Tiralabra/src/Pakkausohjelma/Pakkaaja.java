@@ -10,10 +10,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+/**
+ * Pakkaaja vastaa tekstitiedoston pakkaamisesta.
+ * 
+ * @author topi
+ */
 public class Pakkaaja {
     
     FileOutputStream fos;
@@ -24,15 +27,13 @@ public class Pakkaaja {
     HuffmanKoodaaja huff;
     HashMap<Character, HashMap<Character, Integer>> aakkosto;
     HashMap<Character, Node> puut;
-
+    /**
+     * Konstruktorissa alustetaan puiden rakentamiseen tarvittava huffmankoodaaja.
+     */
     public Pakkaaja() {
         huff = new HuffmanKoodaaja();
     }
 
-    public HashMap<Character, Node> getPuut() {
-        return puut;
-    }
-    
     /**
      * Pakkaajan päämetodi, joka alustaa oliomuuttujat, ja kutsuu muut metodit.
      * @param vanhaNimi
@@ -214,7 +215,11 @@ public class Pakkaaja {
         }
         fw.close();
     }
-
+    /**
+     * Rakentaa jokaiselle aakkoston merkille oman huffman-puun.
+     * 
+     * @return hajautustaulu sisältäen puut. 
+     */
     private HashMap<Character, Node> rakennaPuut() {
         HashMap<Character, Node> puut = new HashMap<>();
         for (Character c : aakkosto.keySet()) {
