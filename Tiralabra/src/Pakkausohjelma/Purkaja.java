@@ -1,6 +1,7 @@
 
 package Pakkausohjelma;
 
+import Pakkausohjelma.tietorakenteet.Node;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

@@ -1,6 +1,7 @@
 
 package Pakkausohjelma;
 
+import Pakkausohjelma.tietorakenteet.Node;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 /**

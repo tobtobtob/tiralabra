@@ -1,12 +1,12 @@
 
-package Pakkausohjelma;
+package Pakkausohjelma.tietorakenteet;
 
 public class Node implements Comparable<Node> {
     
-    Node vasen;
-    Node oikea;
-    char merkki;
-    int yleisyys;
+    public Node vasen;
+    public Node oikea;
+    public char merkki;
+    public int yleisyys;
 
     public Node(char merkki, int yleisyys) {
         
