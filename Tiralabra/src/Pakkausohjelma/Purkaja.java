@@ -25,11 +25,6 @@ public class Purkaja {
     private byte puskuri;
     private int indeksi;
     
-    
-    
-    public Purkaja() {
-        
-    }
 
     /**
      * Purkajan päämetodi, joka lukee tiedostoa bitti kerrallaan, liikkuen 
@@ -43,21 +38,22 @@ public class Purkaja {
      */
     public void puraTiedosto(String tiedosto, String uusinimi, String aakkosto) throws FileNotFoundException, IOException{
         FileInputStream s = new FileInputStream(new File(tiedosto));
-        
+        char valimerkki = '¤';
         Node node;
-        sanakirja = luePuut(aakkosto, '¤');
+        sanakirja = luePuut(aakkosto, valimerkki); //kovakoodattu välimerkki pitää muuttaa järkevämmäksi
         char edellinen = Character.toChars(s.read())[0];
         
         puskuri =  (byte) s.read();
         indeksi = 7;
         fw = new FileWriter(new File(uusinimi));
          fw.write(edellinen);
-        
+        System.out.println("puretaan tiedostoa...");
         while(s.available()> 0){
            node = sanakirja.get(edellinen);
            while(node.oikea != null){
                if(indeksi<0){
                    puskuri = (byte) s.read();
+                   
                    indeksi = 7;
                }
                if(((1<< indeksi) & puskuri) == 0){
@@ -74,6 +70,7 @@ public class Purkaja {
             
         }
         fw.close();
+        System.out.println("valmis!");
     }
     /**
      * Rakentaa hajautustaulun aakkoston merkkeihin liittyvistä huffman-koodipuista.
@@ -85,6 +82,7 @@ public class Purkaja {
      * @throws FileNotFoundException 
      */
     public HashMap<Character, Node> luePuut(String aakkosto,char tyhjaNode) throws FileNotFoundException{
+        System.out.println("luetaan sanakirjaa...");
         HashMap<Character, Node> puut= new HashMap<>();
         Scanner s = new Scanner(new File(aakkosto));
         s.useDelimiter("");

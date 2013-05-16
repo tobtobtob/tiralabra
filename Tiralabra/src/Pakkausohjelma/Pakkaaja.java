@@ -52,7 +52,7 @@ public class Pakkaaja {
             sanakirja.put(c, new HashMap<Character, String>());
             luoSanakirja(puut.get(c), "",sanakirja.get(c) );
         }
-        
+        System.out.println("sanakirja luotu");
         try {
             
         
@@ -60,6 +60,7 @@ public class Pakkaaja {
         } catch (IOException ex) {
             Logger.getLogger(Pakkausohjelma.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("valmis!");
     }
     /**
      * Kirjoittaa annetun tiedoston huffman-koodattuna lukien merkki kerrallaan
@@ -70,6 +71,9 @@ public class Pakkaaja {
      * @throws IOException 
      */
     public void kirjoitaTiedosto(String tiedosto) throws FileNotFoundException, IOException{
+        
+        System.out.println("kirjoitetaan pakattu tiedosto...");
+        
         String valimerkki = "¤";
         kirjoitaAakkostoTiedostoon(puut, valimerkki);
         Scanner s = new Scanner(new File(tiedosto));
@@ -99,7 +103,7 @@ public class Pakkaaja {
      * @return 
      */
     public HashMap<Character, HashMap<Character, Integer>> lueTiedosto(String tiedosto){
-        
+        System.out.println("luetaan tiedostoa...");
         aakkosto = new HashMap<>();
         Scanner s;
         try {
@@ -137,6 +141,7 @@ public class Pakkaaja {
      * @param sanakirja aluksi tyhjä hajautustaulu
      */
     public  void luoSanakirja(Node node, String merkkijono, HashMap<Character, String> sanakirja){
+        
         if(node.oikea == null){
 //            System.out.println(node.merkki + ": "+merkkijono);
             sanakirja.put(node.merkki, merkkijono);
