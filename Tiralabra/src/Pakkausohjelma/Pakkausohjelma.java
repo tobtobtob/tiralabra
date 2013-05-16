@@ -13,7 +13,7 @@ public class Pakkausohjelma {
         System.out.println("Valitse komento (pakkaa | pura)");
         String komento = s.nextLine();
         if("testi".equals(komento)){
-            ajaTesti();
+            ajaTesti(s);
         }
         else if ("pakkaa".equals(komento)){
             System.out.println("anna pakattavan tiedoston nimi:");
@@ -44,15 +44,19 @@ public class Pakkausohjelma {
     /**
      * testimetodi nopeaa debuggausta varten
      */
-    private static void ajaTesti() {
-        try {
+    private static void ajaTesti(Scanner s) {
+        
+            try {
+            System.out.println("anna tiedoston nimi:");
+            String nimi = s.nextLine();
             Pakkaaja pa = new Pakkaaja();
-            pa.pakkaaTiedosto("testitiedostoja/htmltesti.txt", "pakattuTesti");
+            pa.pakkaaTiedosto(nimi, nimi+".pakattu");
             Purkaja p = new Purkaja();
-//            p.setSanakirja(pa.getPuut());
-            p.puraTiedosto("pakattuTesti", "purettu.txt", "aakkosto.txt");
+            p.puraTiedosto(nimi+".pakattu", nimi+".purettu", "aakkosto.txt");
         } catch (IOException ex) {
             System.out.println("fail");
+        
+    
         }
     }
     

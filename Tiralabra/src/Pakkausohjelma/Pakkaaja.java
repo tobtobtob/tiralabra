@@ -60,7 +60,7 @@ public class Pakkaaja {
         } catch (IOException ex) {
             Logger.getLogger(Pakkausohjelma.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("valmis!");
+        System.out.println("pakkaus valmis!");
     }
     /**
      * Kirjoittaa annetun tiedoston huffman-koodattuna lukien merkki kerrallaan

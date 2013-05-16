@@ -70,7 +70,7 @@ public class Purkaja {
             
         }
         fw.close();
-        System.out.println("valmis!");
+        System.out.println("purku valmis!");
     }
     /**
      * Rakentaa hajautustaulun aakkoston merkkeihin liittyvistä huffman-koodipuista.
