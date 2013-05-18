@@ -2,6 +2,7 @@
 package Pakkausohjelma;
 
 import Pakkausohjelma.tietorakenteet.Node;
+import Pakkausohjelma.tietorakenteet.Queue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
+
 import java.util.Scanner;
 
 
@@ -93,17 +94,17 @@ public class Purkaja {
             char c = s.next().charAt(0);
             Node n = new Node(s.next().charAt(0), 0);
             puut.put(c, n);
-            Queue<Node> jono = new LinkedList<>();
-            jono.add(n);
+            Queue<Node> jono = new Queue<>();
+            jono.enQueue(n);
             while(!jono.isEmpty()){
-                Node node = jono.poll();
+                Node node = jono.deQueue();
                 if(node.merkki == tyhjaNode){
                     Node vasen = new Node(s.next().charAt(0), 0);
                     Node oikea = new Node(s.next().charAt(0), 0);
                     node.oikea = oikea;
                     node.vasen = vasen;
-                    jono.add(vasen);
-                    jono.add(oikea);
+                    jono.enQueue(vasen);
+                    jono.enQueue(oikea);
                 }
             }
             

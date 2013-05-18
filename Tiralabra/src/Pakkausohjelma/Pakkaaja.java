@@ -2,6 +2,7 @@
 package Pakkausohjelma;
 
 import Pakkausohjelma.tietorakenteet.Node;
+import Pakkausohjelma.tietorakenteet.Queue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
+
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -201,14 +202,14 @@ public class Pakkaaja {
         for (char c : aakkosto.keySet()) {
             
             fw.write(c);
-            Queue<Node> jono = new LinkedList<>();
-            jono.add(aakkosto.get(c));
+            Queue<Node> jono = new Queue<>();
+            jono.enQueue(aakkosto.get(c));
             while(!jono.isEmpty()){
-                Node n = jono.poll();
+                Node n = jono.deQueue();
                 if(n.vasen != null){
                     fw.write(valimerkki);
-                    jono.add(n.vasen);
-                    jono.add(n.oikea);
+                    jono.enQueue(n.vasen);
+                    jono.enQueue(n.oikea);
                     
                 }
                 else{
