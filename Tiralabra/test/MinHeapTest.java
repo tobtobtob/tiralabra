@@ -38,6 +38,7 @@ public class MinHeapTest {
         heap.add(1);
         assertEquals((Integer) 1, heap.getMin());
         assertEquals((Integer) 3, heap.getMin());
+        assertEquals(0, heap.size());
        
     }
     @Test
@@ -46,6 +47,15 @@ public class MinHeapTest {
             heap.add(i);
         }
         for (int i = 1; i <= 10; i++) {
+            assertEquals((Integer) i, heap.getMin());
+        }
+    }
+    @Test
+    public void isoLisaysJaPoisto(){
+        for (int i = 100; i > 0; i--) {
+            heap.add(i);
+        }
+        for (int i = 1; i <= 100; i++) {
             assertEquals((Integer) i, heap.getMin());
         }
     }
@@ -59,6 +69,7 @@ public class MinHeapTest {
         heap.add(3);
         assertEquals((Integer) 1, heap.getMin());
         assertEquals((Integer) 3, heap.getMin());
+        assertEquals(4, heap.size());
     }
     
 }
