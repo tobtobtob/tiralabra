@@ -5,39 +5,78 @@
 
 package Pakkausohjelma.tietorakenteet;
 
+import java.util.Comparator;
+
 
 public class MinHeap <Type> {
     
     private int loppu;
     private Type[] heap;
+    Comparator<Type> c;
 
-    public MinHeap() {
+    public MinHeap(Comparator<Type> c) {
+        this.c = c;
+        heap = (Type[]) new Object[8];
+        loppu = 0;
     }
     
     
     public Type getMin(){
         
         Type palautus = heap[0];
-        heap[0] = heap[loppu];
+        heap[0] = heap[loppu-1];
+        int indeksi = 1;
+        while(true){
+            if(indeksi*2>= loppu-1){
+                break;
+            }
+            if(c.compare(heap[indeksi*2-1], heap[indeksi*2])<0){
+                if(c.compare(heap[indeksi*2-1], heap[indeksi-1])<0){
+                        swap(indeksi, indeksi*2);
+                        indeksi = indeksi*2;
+                }
+                else{
+                    break;
+                }
+            }
+            else {
+                if(c.compare(heap[indeksi*2], heap[indeksi-1])<0){
+                        swap(indeksi, indeksi*2+1);
+                        indeksi = indeksi*2+1;
+                }
+                else{
+                    break;
+                }
+            }
+        }
         loppu--;
         
         return palautus;
     }
-    public void add(Type c){
+    public void add(Type t){
         loppu++;
         if(loppu >= heap.length){
             kasvataKokoa();
         }
-        heap[loppu] = c;
+        heap[loppu-1] = t;
         int uusi = loppu;
         int verrattava = loppu/2;
         while(true){
-            if(uusi == verrattava){
+            if(uusi == 1){
                 break;
             }
-//            if(heap[uusi].compareTo(heap[verrattava]))
+            if(c.compare(heap[uusi-1], heap[verrattava-1]) < 0){
+                swap(uusi, verrattava);
+                uusi = uusi/2;
+                verrattava = uusi/2;
+            }
+            else{
+                break;
+            }
         }
+        
     }
+    
 
     private void kasvataKokoa() {
         
@@ -48,4 +87,15 @@ public class MinHeap <Type> {
         }
         heap = uusi;
     }
+
+    private void swap(int uusi, int verrattava) {
+        Type apu = heap[uusi-1];
+        heap[uusi-1] = heap[verrattava-1];
+        heap[verrattava-1] = apu;
+    }
+    public int size(){
+        return loppu;
+    }
+
+    
 }

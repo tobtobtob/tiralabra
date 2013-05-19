@@ -1,11 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package Pakkausohjelma.tietorakenteet;
 
-
+/**
+ * Jono on toteutettu yksinkertaisena linkitettynä listana.
+ * 
+ * @author topi
+ * @param <Type> Jonon sisältämien olioiden tyyppi. 
+ */
 public class Queue<Type> {
     
     private Node<Type> alku;
@@ -20,13 +22,23 @@ public class Queue<Type> {
         }
         
     }
-    
+    /**
+     * tarkastaa onko jono tyhjä
+     * 
+     * @return 
+     */
     public boolean isEmpty(){
         if(alku == null){
             return true;
         }
         return false;
     }
+    
+    /**
+     * palauttaa ja poistaa jonon ensimmäisen alkion.
+     * 
+     * @return 
+     */
     public Type deQueue(){
         if(isEmpty()){
             return null;
@@ -35,6 +47,10 @@ public class Queue<Type> {
         alku = alku.next;
         return vanha.value;
     }
+    /**
+     * Laittaa parametrina annetun alkion jonon perään
+     * @param t 
+     */
     public void enQueue(Type t){
         if(isEmpty()){
             alku =new Node<>(t);

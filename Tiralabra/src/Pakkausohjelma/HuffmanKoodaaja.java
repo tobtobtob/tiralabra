@@ -1,7 +1,9 @@
 
 package Pakkausohjelma;
 
+import Pakkausohjelma.tietorakenteet.MinHeap;
 import Pakkausohjelma.tietorakenteet.Node;
+import Pakkausohjelma.tietorakenteet.NodeComparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 /**
@@ -19,20 +21,23 @@ public class HuffmanKoodaaja {
      * @return sanakirja puumuodossa
      */
     public Node rakennaPuu(HashMap<Character, Integer> aakkosto) {
-        PriorityQueue<Node> keko = new PriorityQueue<>();
+        
+        NodeComparator nc = new NodeComparator();
+        MinHeap<Node> keko = new MinHeap<>(nc);
+        
         for (char s : aakkosto.keySet()) {
             Node n = new Node(s, aakkosto.get(s));
             keko.add(n);
         }
         while (keko.size() > 1) {
-            Node node1 = keko.poll();
-            Node node2 = keko.poll();
+            Node node1 = keko.getMin();
+            Node node2 = keko.getMin();
             Node uusi = new Node('_', node1.yleisyys + node2.yleisyys);
             uusi.vasen = node1;
             uusi.oikea = node2;
             keko.add(uusi);
         }
-        return keko.poll();
+        return keko.getMin();
     }
    
     

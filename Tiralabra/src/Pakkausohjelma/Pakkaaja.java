@@ -9,8 +9,6 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
-
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,14 +19,14 @@ import java.util.logging.Logger;
  */
 public class Pakkaaja {
     
-    FileOutputStream fos;
-    String tiedostonNimi;
-    HashMap<Character, HashMap<Character, String>> sanakirja;
-    byte puskuri;
-    int indeksi;
-    HuffmanKoodaaja huff;
-    HashMap<Character, HashMap<Character, Integer>> aakkosto;
-    HashMap<Character, Node> puut;
+    private FileOutputStream fos;
+    private String tiedostonNimi;
+    private HashMap<Character, HashMap<Character, String>> sanakirja;
+    private byte puskuri;
+    private int indeksi;
+    private HuffmanKoodaaja huff;
+    private HashMap<Character, HashMap<Character, Integer>> aakkosto;
+    private HashMap<Character, Node> puut;
     /**
      * Konstruktorissa alustetaan puiden rakentamiseen tarvittava huffmankoodaaja.
      */
