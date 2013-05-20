@@ -13,14 +13,28 @@ public class MinHeap <Type> {
     private int loppu;
     private Type[] heap;
     Comparator<Type> c;
-
-    public MinHeap(Comparator<Type> c) {
+    /**
+     * Konstruktori itse määrätyllä taulukon alkukoolla
+     * @param c 
+     * @param koko keolle varatun taulukon koko
+     */
+    public MinHeap(Comparator<Type> c, int koko) {
         this.c = c;
-        heap = (Type[]) new Object[8];
+        heap = (Type[]) new Object[koko];
         loppu = 0;
     }
+    /**
+     * Konstruktori oletuskoolla 8
+     * @param c 
+     */
+    public MinHeap(Comparator<Type> c) {
+        this(c, 8);
+    }
     
-    
+    /**
+     * palauttaa ja poistaa pienimmän alkion keosta.
+     * @return 
+     */
     public Type getMin(){
         
         Type palautus = heap[0];
@@ -53,6 +67,10 @@ public class MinHeap <Type> {
         
         return palautus;
     }
+    /**
+     * Lisää parametrina annetun alkion kekoon, säilyttäen keon ehdot.
+     * @param t 
+     */
     public void add(Type t){
         loppu++;
         if(loppu >= heap.length){
@@ -77,7 +95,9 @@ public class MinHeap <Type> {
         
     }
     
-
+    /**
+     * Tuplaa keon käytössä olevan taulukon tilan loppuessa
+     */
     private void kasvataKokoa() {
         
         Type[] uusi = (Type[]) new Object[heap.length*2];
@@ -87,12 +107,23 @@ public class MinHeap <Type> {
         }
         heap = uusi;
     }
-
+    /**
+     * Vaihtaa kahden parametrina annetun alkion paikkaa
+     * 
+     * @param uusi vaihdettavan alkion indeksi
+     * @param verrattava vaihdettavan alkion indeksi
+     */
+    
     private void swap(int uusi, int verrattava) {
         Type apu = heap[uusi-1];
         heap[uusi-1] = heap[verrattava-1];
         heap[verrattava-1] = apu;
     }
+    
+    /**
+     * palauttaa keon alkioiden määrän
+     * @return alkioiden määrä
+     */
     public int size(){
         return loppu;
     }

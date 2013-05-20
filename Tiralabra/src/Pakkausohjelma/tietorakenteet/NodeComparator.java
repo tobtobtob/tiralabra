@@ -7,7 +7,11 @@ package Pakkausohjelma.tietorakenteet;
 
 import java.util.Comparator;
 
-
+/**
+ * minimikeon käyttämä apuluokka Nodejen vertailuun.
+ * 
+ * @author topi
+ */
 public class NodeComparator implements Comparator<Node> {
 
     @Override
