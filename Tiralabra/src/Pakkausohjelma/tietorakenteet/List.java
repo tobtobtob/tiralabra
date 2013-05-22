@@ -5,14 +5,9 @@
 
 package Pakkausohjelma.tietorakenteet;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.ListIterator;
-
-
 /**
  * List on yksinkertainen lista, jonka operaatioina ovat lisääminen ja
- * koko listan palauttaminen
+ * koko listan palauttaminen. Lista on suunniteltu vain hashTablen keySetin käyttöön.
  * @author topi
  * @param T 
  */

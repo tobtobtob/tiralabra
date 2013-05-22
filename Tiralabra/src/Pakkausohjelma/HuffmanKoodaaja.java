@@ -5,8 +5,6 @@ import Pakkausohjelma.tietorakenteet.HashTable;
 import Pakkausohjelma.tietorakenteet.MinHeap;
 import Pakkausohjelma.tietorakenteet.Node;
 import Pakkausohjelma.tietorakenteet.NodeComparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
 /**
  * Huffmankoodaaja on pakkaajan tarvitsema apuluokka puiden rakentamiseen.
  * @author topi
