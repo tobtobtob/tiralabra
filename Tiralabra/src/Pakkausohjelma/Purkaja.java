@@ -1,6 +1,7 @@
 
 package Pakkausohjelma;
 
+import Pakkausohjelma.tietorakenteet.HashTable;
 import Pakkausohjelma.tietorakenteet.Node;
 import Pakkausohjelma.tietorakenteet.Queue;
 import java.io.File;
@@ -8,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
+
 import java.util.LinkedList;
 
 import java.util.Scanner;
@@ -20,7 +21,7 @@ import java.util.Scanner;
  */
 public class Purkaja {
     
-    private HashMap<Character, Node> sanakirja;
+    private HashTable<Character, Node> sanakirja;
     
     private FileWriter fw;
     private byte puskuri;
@@ -82,9 +83,9 @@ public class Purkaja {
      * @return
      * @throws FileNotFoundException 
      */
-    public HashMap<Character, Node> luePuut(String aakkosto,char tyhjaNode) throws FileNotFoundException{
+    public HashTable<Character, Node> luePuut(String aakkosto,char tyhjaNode) throws FileNotFoundException{
         System.out.println("luetaan sanakirjaa...");
-        HashMap<Character, Node> puut= new HashMap<>();
+        HashTable<Character, Node> puut= new HashTable<>(50);
         Scanner s = new Scanner(new File(aakkosto));
         s.useDelimiter("");
         while(s.hasNext()){
