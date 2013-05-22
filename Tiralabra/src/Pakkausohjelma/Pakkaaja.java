@@ -1,6 +1,7 @@
 
 package Pakkausohjelma;
 
+import Pakkausohjelma.tietorakenteet.HashTable;
 import Pakkausohjelma.tietorakenteet.Node;
 import Pakkausohjelma.tietorakenteet.Queue;
 import java.io.File;
@@ -21,12 +22,12 @@ public class Pakkaaja {
     
     private FileOutputStream fos;
     private String tiedostonNimi;
-    private HashMap<Character, HashMap<Character, String>> sanakirja;
+    private HashTable<Character, HashTable<Character, String>> sanakirja;
     private byte puskuri;
     private int indeksi;
     private HuffmanKoodaaja huff;
-    private HashMap<Character, HashMap<Character, Integer>> aakkosto;
-    private HashMap<Character, Node> puut;
+    private HashTable<Character, HashTable<Character, Integer>> aakkosto;
+    private HashTable<Character, Node> puut;
     /**
      * Konstruktorissa alustetaan puiden rakentamiseen tarvittava huffmankoodaaja.
      */
@@ -43,13 +44,14 @@ public class Pakkaaja {
     public void pakkaaTiedosto(String vanhaNimi, String uusiNimi) throws FileNotFoundException{
         fos = new FileOutputStream(uusiNimi);
         tiedostonNimi = uusiNimi;
-        HashMap<Character, HashMap<Character, Integer>> aakkosto = lueTiedosto(vanhaNimi); 
+        HashTable<Character, HashTable<Character, Integer>> aakkosto = lueTiedosto(vanhaNimi); 
         puut = rakennaPuut();
         
-        sanakirja = new HashMap<>();
-        for (Character c : puut.keySet()) {
-            sanakirja.put(c, new HashMap<Character, String>());
-            luoSanakirja(puut.get(c), "",sanakirja.get(c) );
+        sanakirja = new HashTable<>(50);
+        Object[] keyset= puut.keySet();
+        for (Object c : keyset) {
+            sanakirja.put((char) c, new HashTable<Character, String>(50));
+            luoSanakirja(puut.get((char)c), "",sanakirja.get((char)c) );
         }
         System.out.println("sanakirja luotu");
         try {
@@ -101,9 +103,9 @@ public class Pakkaaja {
      * @param tiedosto pakattava tiedosto
      * @return 
      */
-    public HashMap<Character, HashMap<Character, Integer>> lueTiedosto(String tiedosto){
+    public HashTable<Character, HashTable<Character, Integer>> lueTiedosto(String tiedosto){
         System.out.println("luetaan tiedostoa...");
-        aakkosto = new HashMap<>();
+        aakkosto = new HashTable<>(50);
         Scanner s;
         try {
   
@@ -114,7 +116,7 @@ public class Pakkaaja {
             
             char c = s.next().charAt(0);
             if(!aakkosto.containsKey(edellinen)){
-                aakkosto.put(edellinen, new HashMap<Character, Integer>());
+                aakkosto.put(edellinen, new HashTable<Character, Integer>(50));
                 aakkosto.get(edellinen).put(c, 1);
             }
             else{
@@ -139,7 +141,7 @@ public class Pakkaaja {
      * @param merkkijono tyhjä merkkijono
      * @param sanakirja aluksi tyhjä hajautustaulu
      */
-    public  void luoSanakirja(Node node, String merkkijono, HashMap<Character, String> sanakirja){
+    public  void luoSanakirja(Node node, String merkkijono, HashTable<Character, String> sanakirja){
         
         if(node.oikea == null){
 //            System.out.println(node.merkki + ": "+merkkijono);
@@ -195,13 +197,15 @@ public class Pakkaaja {
      * @param valimerkki merkki, joka ei sisälly tiedoston aakkostoon.
      * @throws IOException 
      */
-    public void kirjoitaAakkostoTiedostoon(HashMap<Character, Node> aakkosto, String valimerkki) throws IOException{
+    public void kirjoitaAakkostoTiedostoon(HashTable<Character, Node> aakkosto, String valimerkki) throws IOException{
         FileWriter fw = new FileWriter("aakkosto.txt");
-        for (char c : aakkosto.keySet()) {
+        Object[] keyset = aakkosto.keySet();
+        
+        for (Object merkki : keyset) {
             
-            fw.write(c);
+            fw.write((char) merkki);
             Queue<Node> jono = new Queue<>();
-            jono.enQueue(aakkosto.get(c));
+            jono.enQueue(aakkosto.get((char) merkki));
             while(!jono.isEmpty()){
                 Node n = jono.deQueue();
                 if(n.vasen != null){
@@ -223,11 +227,16 @@ public class Pakkaaja {
      * 
      * @return hajautustaulu sisältäen puut. 
      */
-    private HashMap<Character, Node> rakennaPuut() {
-        HashMap<Character, Node> puut = new HashMap<>();
-        for (Character c : aakkosto.keySet()) {
+    
+    private HashTable<Character, Node> rakennaPuut() {
+        HashTable<Character, Node> puut;
+        puut = new HashTable<>(50);
+        
+        Object[] keyset = aakkosto.keySet();
+        
+        for (Object c :keyset) {
             
-            puut.put(c,huff.rakennaPuu(aakkosto.get(c)));
+            puut.put((char) c,huff.rakennaPuu(aakkosto.get((char)c)));
             
         }
         return puut;

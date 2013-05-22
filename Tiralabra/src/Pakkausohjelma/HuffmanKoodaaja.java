@@ -1,6 +1,7 @@
 
 package Pakkausohjelma;
 
+import Pakkausohjelma.tietorakenteet.HashTable;
 import Pakkausohjelma.tietorakenteet.MinHeap;
 import Pakkausohjelma.tietorakenteet.Node;
 import Pakkausohjelma.tietorakenteet.NodeComparator;
@@ -20,13 +21,13 @@ public class HuffmanKoodaaja {
      * @param Merkkien esiintymistiheydet
      * @return sanakirja puumuodossa
      */
-    public Node rakennaPuu(HashMap<Character, Integer> aakkosto) {
+    public Node rakennaPuu(HashTable<Character, Integer> aakkosto) {
         
         NodeComparator nc = new NodeComparator();
         MinHeap<Node> keko = new MinHeap<>(nc);
-        
-        for (char s : aakkosto.keySet()) {
-            Node n = new Node(s, aakkosto.get(s));
+        Object[] keyset = aakkosto.keySet();
+        for (Object merkki : keyset) {
+            Node n = new Node((char)merkki, aakkosto.get((char)merkki));
             keko.add(n);
         }
         while (keko.size() > 1) {

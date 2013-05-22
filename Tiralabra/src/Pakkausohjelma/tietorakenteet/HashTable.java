@@ -6,39 +6,40 @@
 package Pakkausohjelma.tietorakenteet;
 
 
-public class HashTable<Key, Value> {
+public class HashTable<K, V> {
     
-    private class Node<Key, Value>{
-        Key key;
-        Value value;
-        Node<Key,Value> next;
+    private class Node<K, V>{
+        K key;
+        V value;
+        Node<K,V> next;
 
-        public Node(Key key, Value value) {
+        public Node(K key, V value) {
             this.key = key;
             this.value = value;
         }
         
     }
     
-    Node<Key, Value>[] values;
-    Set<Key> keyset;
+    Node<K, V>[] values;
+    List<K> keyset;
     int koko; 
 
     public HashTable(int koko) {
         
         this.koko = koko;
-        values = new Node[koko];
         
+        values = new Node[koko];
+        keyset = new List<>(koko);
     }
-    private int hash(Key key){
+    private int hash(K key){
         return key.hashCode() % koko;
     }
-    public Value get(Key key){
-        Node<Key, Value> node = values[hash(key)];
+    public V get(K key){
+        Node<K, V> node = values[hash(key)];
         if(node == null){
             return null;
         }
-        while(node.key != key){
+        while(node.key.hashCode() != key.hashCode()){
             node = node.next;
             if(node == null){
                 return null;
@@ -46,24 +47,36 @@ public class HashTable<Key, Value> {
         }
         return node.value;
     }
-    public void put(Key key, Value value){
+    public boolean containsKey(K key){
+        Node node = values[hash(key)];
+        while(node != null){
+            if(node.key.hashCode() == key.hashCode()){
+                return true;
+            }
+            node = node.next;
+        }
+        return false;
+    }
+    public void put(K key, V value){
+        
         int indeksi = hash(key);
-        Node<Key, Value> node = values[indeksi];
+        Node<K, V> node = values[indeksi];
         
         if(node == null){
             node = new Node<>(key, value);
             values[hash(key)] = node;
+            keyset.add(key);
             return;
         }
-        if(node.key == key){
+        if(node.key.hashCode() == key.hashCode()){
             node = new Node<>(key, value);
             node.next = values[indeksi].next;
             values[indeksi] = node;
             return;
         }
-        Node<Key, Value> edellinen = node;
+        Node<K, V> edellinen = node;
         while(node != null){
-            if(node.key == key){
+            if(node.key.hashCode() == key.hashCode()){
                 Node seuraava = node.next;
                 node = new Node<>(key, value);
                 edellinen.next = node;
@@ -74,9 +87,12 @@ public class HashTable<Key, Value> {
             node = node.next;
         }
         node = new Node<>(key, value);
-       
+        keyset.add(key);
         edellinen.next = node;
         
+    }
+    public K[] keySet(){
+        return keyset.get();
     }
     
 }

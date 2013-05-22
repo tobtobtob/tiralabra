@@ -5,11 +5,9 @@
 
 import Pakkausohjelma.tietorakenteet.HashTable;
 import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
@@ -48,12 +46,49 @@ public class HashTableTest {
     }
     @Test
     public void ylivuotolistatToimii(){
-        String s = "qwertyuiopasdfghjklzxcvbnm,.-";
+        String s = "qwertyuiopasdfghjklzxcvåäbnm,.-";
         for (int i = 0; i < s.length(); i++) {
-            table.put(s.charAt(i), i);
+            table.put((Character) s.charAt(i), i);
         }
         for (int i = 0; i < s.length(); i++) {
             assertEquals((Integer) i, table.get(s.charAt(i)));
         }
+    }
+    @Test
+    public void keySetTesti1(){
+        table.put('å', 94);
+        table.put('f', 88);
+        table.put('t', 2);
+        char[] tulos = {'å', 'f', 't'};
+        Object[] keyset;
+        keyset =  table.keySet();
+        for (int i = 0; i < keyset.length; i++) {
+            assertTrue(tulos[i] ==(Character) keyset[i]);
+        }
+    }
+    @Test
+    public void keySetTesti2(){
+        table.put('å', 94);
+        table.put('å', 9774);
+        table.put('å', 944);
+        table.put('f', 88);
+        table.put('f', 899);
+        table.put('t', 2);
+        char[] tulos = {'å', 'f', 't'};
+        Object[] keyset;
+        keyset =  table.keySet();
+        for (int i = 0; i < keyset.length; i++) {
+            assertTrue(tulos[i] ==(Character) keyset[i]);
+        }
+    }
+    @Test
+    public void containsKeyTesti(){
+        table.put('ö', 6);
+        table.put('ö', 8);
+        table.put('å', 54);
+        table.put('p', 333);
+        assertTrue(table.containsKey('ö'));
+        assertFalse(table.containsKey('y'));
+        assertTrue(table.containsKey('å'));
     }
 }
