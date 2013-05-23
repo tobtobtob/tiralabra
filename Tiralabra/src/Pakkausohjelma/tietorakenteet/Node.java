@@ -1,6 +1,9 @@
 
 package Pakkausohjelma.tietorakenteet;
-
+/**
+ * Huffman-koodin muodostamisessa käytetyn puun yksinkertainen toteutus.
+ * @author topi
+ */
 public class Node implements Comparable<Node> {
     
     public Node vasen;

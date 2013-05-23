@@ -16,15 +16,8 @@ import Pakkausohjelma.tietorakenteet.*;
  */
 public class ListaTest {
     List<Integer> lista;
+    
     public ListaTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
     }
     
     @Before
@@ -32,9 +25,6 @@ public class ListaTest {
         lista = new List(5);
     }
     
-    @After
-    public void tearDown() {
-    }
     
     @Test
     public void helppoLisaysJaPoistoTesti(){

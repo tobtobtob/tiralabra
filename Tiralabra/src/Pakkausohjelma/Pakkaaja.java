@@ -46,10 +46,10 @@ public class Pakkaaja {
         HashTable<Character, HashTable<Character, Integer>> aakkosto = lueTiedosto(vanhaNimi); 
         puut = rakennaPuut();
         
-        sanakirja = new HashTable<>(50);
+        sanakirja = new HashTable<>(100);
         Object[] keyset= puut.keySet();
         for (Object c : keyset) {
-            sanakirja.put((char) c, new HashTable<Character, String>(50));
+            sanakirja.put((char) c, new HashTable<Character, String>(100));
             luoSanakirja(puut.get((char)c), "",sanakirja.get((char)c) );
         }
         System.out.println("sanakirja luotu");
@@ -104,7 +104,7 @@ public class Pakkaaja {
      */
     public HashTable<Character, HashTable<Character, Integer>> lueTiedosto(String tiedosto){
         System.out.println("luetaan tiedostoa...");
-        aakkosto = new HashTable<>(50);
+        aakkosto = new HashTable<>(100);
         Scanner s;
         try {
   
@@ -229,7 +229,7 @@ public class Pakkaaja {
     
     private HashTable<Character, Node> rakennaPuut() {
         HashTable<Character, Node> puut;
-        puut = new HashTable<>(50);
+        puut = new HashTable<>(100);
         
         Object[] keyset = aakkosto.keySet();
         

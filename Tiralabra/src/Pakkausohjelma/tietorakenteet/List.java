@@ -8,7 +8,7 @@ package Pakkausohjelma.tietorakenteet;
 /**
  * List on yksinkertainen lista, jonka operaatioina ovat lisääminen ja
  * koko listan palauttaminen. Lista on suunniteltu vain hashTablen keySetin käyttöön.
- * @author topi
+ * 
  * @param T 
  */
 public class List<T >{
@@ -22,6 +22,10 @@ public class List<T >{
         lista = (T[]) new Object[koko];
          
     }
+    /**
+     * Lisää parametrina annetun tyyppiä T olevan alkion listan perään.
+     * @param lisattava 
+     */
     public void add(T lisattava){
         lista[loppu] = lisattava;
         loppu++;
@@ -29,7 +33,9 @@ public class List<T >{
             kasvataKokoa();
         }
     }
-
+    /**
+     * Kasvattaa listan koon kaksinkertaiseksi alkuperäiseen nähden tilan loppuessa.
+     */
     private void kasvataKokoa() {
         T[] uusi = (T[]) new Object[loppu*2];
         for (int i = 0; i < lista.length; i++) {
@@ -37,6 +43,10 @@ public class List<T >{
         }
         lista = uusi;
     }
+    /**
+     * Palauttaa kaikki listan alkiot taulukkona, jossa ei ole tyhjiä paikkoja.
+     * @return lista
+     */
     public T[] get(){
         T[] palautus = (T[]) new Object[loppu];
         for (int i = 0; i < palautus.length; i++) {

@@ -82,7 +82,7 @@ public class Purkaja {
      */
     public HashTable<Character, Node> luePuut(String aakkosto,char tyhjaNode) throws FileNotFoundException{
         System.out.println("luetaan sanakirjaa...");
-        HashTable<Character, Node> puut= new HashTable<>(50);
+        HashTable<Character, Node> puut= new HashTable<>(100);
         Scanner s = new Scanner(new File(aakkosto));
         s.useDelimiter("");
         while(s.hasNext()){

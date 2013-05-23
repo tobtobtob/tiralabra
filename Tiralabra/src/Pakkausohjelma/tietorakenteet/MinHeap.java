@@ -7,27 +7,31 @@ package Pakkausohjelma.tietorakenteet;
 
 import java.util.Comparator;
 
-
-public class MinHeap <Type> {
+/**
+ * Minimikeko
+ * @author topi
+ * @param <T> 
+ */
+public class MinHeap <T> {
     
     private int loppu;
-    private Type[] heap;
-    Comparator<Type> c;
+    private T[] heap;
+    Comparator<T> c;
     /**
      * Konstruktori itse määrätyllä taulukon alkukoolla
      * @param c 
      * @param koko keolle varatun taulukon koko
      */
-    public MinHeap(Comparator<Type> c, int koko) {
+    public MinHeap(Comparator<T> c, int koko) {
         this.c = c;
-        heap = (Type[]) new Object[koko];
+        heap = (T[]) new Object[koko];
         loppu = 0;
     }
     /**
      * Konstruktori oletuskoolla 8
      * @param c 
      */
-    public MinHeap(Comparator<Type> c) {
+    public MinHeap(Comparator<T> c) {
         this(c, 8);
     }
     
@@ -35,9 +39,9 @@ public class MinHeap <Type> {
      * palauttaa ja poistaa pienimmän alkion keosta.
      * @return 
      */
-    public Type getMin(){
+    public T getMin(){
         
-        Type palautus = heap[0];
+        T palautus = heap[0];
         heap[0] = heap[loppu-1];
         int indeksi = 1;
         while(true){
@@ -71,7 +75,7 @@ public class MinHeap <Type> {
      * Lisää parametrina annetun alkion kekoon, säilyttäen keon ehdot.
      * @param t 
      */
-    public void add(Type t){
+    public void add(T t){
         loppu++;
         if(loppu >= heap.length){
             kasvataKokoa();
@@ -100,7 +104,7 @@ public class MinHeap <Type> {
      */
     private void kasvataKokoa() {
         
-        Type[] uusi = (Type[]) new Object[heap.length*2];
+        T[] uusi = (T[]) new Object[heap.length*2];
         
         for (int i = 0; i < heap.length; i++) {
             uusi[i] = heap[i];
@@ -115,7 +119,7 @@ public class MinHeap <Type> {
      */
     
     private void swap(int uusi, int verrattava) {
-        Type apu = heap[uusi-1];
+        T apu = heap[uusi-1];
         heap[uusi-1] = heap[verrattava-1];
         heap[verrattava-1] = apu;
     }

@@ -7,7 +7,10 @@
 
 import java.util.Comparator;
 
-
+/**
+ * Vain testien käytössä oleva vertailija.
+ * @author topi
+ */
 public class IntComparator implements Comparator<Integer> {
 
     @Override

@@ -6,12 +6,12 @@ package Pakkausohjelma.tietorakenteet;
  * Jono on toteutettu yksinkertaisena linkitettynä listana.
  * 
  * @author topi
- * @param <Type> Jonon sisältämien olioiden tyyppi. 
+ * @param T Jonon sisältämien olioiden tyyppi. 
  */
-public class Queue<Type> {
+public class Queue<T> {
     
-    private Node<Type> alku;
-    private Node<Type> loppu;
+    private Node<T> alku;
+    private Node<T> loppu;
     
     private class Node<Type>{
         Node<Type> next;
@@ -39,11 +39,11 @@ public class Queue<Type> {
      * 
      * @return 
      */
-    public Type deQueue(){
+    public T deQueue(){
         if(isEmpty()){
             return null;
         }
-        Node<Type> vanha = alku;
+        Node<T> vanha = alku;
         alku = alku.next;
         return vanha.value;
     }
@@ -51,7 +51,7 @@ public class Queue<Type> {
      * Laittaa parametrina annetun alkion jonon perään
      * @param t 
      */
-    public void enQueue(Type t){
+    public void enQueue(T t){
         if(isEmpty()){
             alku =new Node<>(t);
             loppu = alku;
