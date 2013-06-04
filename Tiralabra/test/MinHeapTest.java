@@ -71,5 +71,38 @@ public class MinHeapTest {
         assertEquals((Integer) 3, heap.getMin());
         assertEquals(4, heap.size());
     }
+    @Test
+    public void tyhjanKeonTestaus(){
+        assertTrue(heap.size() == 0);
+    }
+    @Test
+    public void lisaysJaPoisto3(){
+        heap.add(7);
+        heap.add(6);
+        heap.add(4);
+        heap.add(3);
+        heap.add(3);
+        heap.add(2);
+        heap.add(98);
+        heap.add(337);
+        heap.add(921);
+        heap.add(-3);
+        heap.add(44);
+        heap.add(-22);
+        assertTrue(heap.size() == 12);
+        assertTrue(heap.getMin() == -22);
+        assertTrue(heap.getMin() == -3);
+        assertTrue(heap.getMin() == 2);
+        assertTrue(heap.getMin() == 3);
+        assertTrue(heap.getMin() == 3);
+        assertTrue(heap.getMin() == 4);
+        assertTrue(heap.getMin() == 6);
+        assertTrue(heap.getMin() == 7);
+        assertTrue(heap.getMin() == 44);
+        assertTrue(heap.getMin() == 98);
+        assertTrue(heap.getMin() == 337);
+        assertTrue(heap.getMin() == 921);
+        assertTrue(heap.size() == 0);
+    }
     
 }

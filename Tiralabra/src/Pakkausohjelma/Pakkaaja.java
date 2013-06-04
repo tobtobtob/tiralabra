@@ -197,29 +197,30 @@ public class Pakkaaja {
      * @throws IOException 
      */
     public void kirjoitaAakkostoTiedostoon(HashTable<Character, Node> aakkosto, String valimerkki) throws IOException{
-        FileWriter fw = new FileWriter("aakkosto.txt");
+       
         Object[] keyset = aakkosto.keySet();
         
         for (Object merkki : keyset) {
             
-            fw.write((char) merkki);
+            fos.write((char) merkki);
             Queue<Node> jono = new Queue<>();
             jono.enQueue(aakkosto.get((char) merkki));
             while(!jono.isEmpty()){
                 Node n = jono.deQueue();
                 if(n.vasen != null){
-                    fw.write(valimerkki);
+                    fos.write((char) valimerkki.charAt(0));
                     jono.enQueue(n.vasen);
                     jono.enQueue(n.oikea);
                     
                 }
                 else{
-                fw.write(Character.toString(n.merkki));
+                fos.write(n.merkki);
                 }
                 
             }           
         }
-        fw.close();
+        fos.write(valimerkki.charAt(0));
+        
     }
     /**
      * Rakentaa jokaiselle aakkoston merkille oman huffman-puun.

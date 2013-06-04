@@ -44,4 +44,9 @@ public class QueueTest {
         q = new Queue<Integer>();
         assertEquals(q.deQueue(), null);
     }
+    @Test
+    public void tyhjanJononTestaus(){
+        q = new Queue<Integer>();
+        assertTrue(q.isEmpty() == true);
+    }
 }

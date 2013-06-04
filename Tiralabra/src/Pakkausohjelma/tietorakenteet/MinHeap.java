@@ -45,7 +45,7 @@ public class MinHeap <T> {
         heap[0] = heap[loppu-1];
         int indeksi = 1;
         while(true){
-            if(indeksi*2>= loppu-1){
+            if(indeksi*2> loppu-1){
                 break;
             }
             if(c.compare(heap[indeksi*2-1], heap[indeksi*2])<0){

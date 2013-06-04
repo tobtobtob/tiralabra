@@ -36,22 +36,22 @@ public class Purkaja {
      * @throws IOException 
      */
     public void puraTiedosto(String tiedosto, String uusinimi, String aakkosto) throws FileNotFoundException, IOException{
-        FileInputStream s = new FileInputStream(new File(tiedosto));
+        FileInputStream lukija = new FileInputStream(new File(tiedosto));
         char valimerkki = '¤';
         Node node;
-        sanakirja = luePuut(aakkosto, valimerkki); //kovakoodattu välimerkki pitää muuttaa järkevämmäksi
-        char edellinen = Character.toChars(s.read())[0];
+        sanakirja = luePuut(aakkosto, valimerkki, lukija); //kovakoodattu välimerkki pitää muuttaa järkevämmäksi
+        char edellinen = Character.toChars(lukija.read())[0];
         
-        puskuri =  (byte) s.read();
+        puskuri =  (byte) lukija.read();
         indeksi = 7;
         fw = new FileWriter(new File(uusinimi));
          fw.write(edellinen);
         System.out.println("puretaan tiedostoa...");
-        while(s.available()> 0){
+        while(lukija.available()> 0){
            node = sanakirja.get(edellinen);
            while(node.oikea != null){
                if(indeksi<0){
-                   puskuri = (byte) s.read();
+                   puskuri = (byte) lukija.read();
                    
                    indeksi = 7;
                }
@@ -80,25 +80,26 @@ public class Purkaja {
      * @return
      * @throws FileNotFoundException 
      */
-    public HashTable<Character, Node> luePuut(String aakkosto,char tyhjaNode) throws FileNotFoundException{
+    public HashTable<Character, Node> luePuut(String aakkosto,char tyhjaNode, FileInputStream lukija) throws FileNotFoundException, IOException{
         System.out.println("luetaan sanakirjaa...");
         HashTable<Character, Node> puut= new HashTable<>(100);
-        Scanner s = new Scanner(new File(aakkosto));
-        s.useDelimiter("");
-        while(s.hasNext()){
-            if(!s.hasNext()){
+//        Scanner s = new Scanner(new File(aakkosto));
+//        s.useDelimiter("");
+        while(true){
+            
+            char c = (char) lukija.read();
+            if( c == tyhjaNode){
                 break;
             }
-            char c = s.next().charAt(0);
-            Node n = new Node(s.next().charAt(0), 0);
+            Node n = new Node((char)lukija.read(), 0);
             puut.put(c, n);
             Queue<Node> jono = new Queue<>();
             jono.enQueue(n);
             while(!jono.isEmpty()){
                 Node node = jono.deQueue();
                 if(node.merkki == tyhjaNode){
-                    Node vasen = new Node(s.next().charAt(0), 0);
-                    Node oikea = new Node(s.next().charAt(0), 0);
+                    Node vasen = new Node((char) lukija.read(), 0);
+                    Node oikea = new Node((char) lukija.read(), 0);
                     node.oikea = oikea;
                     node.vasen = vasen;
                     jono.enQueue(vasen);
