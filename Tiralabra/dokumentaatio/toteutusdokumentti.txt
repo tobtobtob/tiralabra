@@ -1,0 +1,13 @@
+﻿Toteutusdokumentti
+
+Toteutin harjoitustyökseni suunnitelmien mukaisesti Huffman-koodia käyttävän pakkausohjelman. Lähdin aluksi toteuttamaan aivan tavallista huffman-algoritmia, mutta projektin alkuvaiheissa keksin, että teenkin kieltä sisältäville tekstitiedostoille viritellyn version huffmanista. Versiossani ohjelma luo yhden koodiston sijasta jokaiselle tiedoston merkille oman koodiston. Merkin koodi määräytyy sitten edellisen merkin koodistosta. Eli mitä yleisempi tietty merkki on edellisen merkkinsä seuraajana – sitä lyhyemmän koodin se saa. Tämä parantaa huomattavasti pakkaussuhdetta, kun tiedostot ovat jotain kieltä. Kielissä toistuu aina säännöllisyyksiä, esimerkiksi html:ssä “<” merkkiä seuraa usein “/”. 
+
+Ongelmana on toki puiden koon kasvu huomattavan suureksi, mutta vaikka sen ottaa huomioon, on ero melko pienilläkin tiedostoilla huomattavissa. 
+
+Ohjelmani on jaettu yksinkertaisiin komponentteihin: pakkaajaan, purkajaan, huffmankoodaajaan ja main-luokkaan, joka huolehtii käyttöliittymästä. Lienee itsestäänselvää, mikä on kunkin osan tehtävä. Tälläinen karkea luokkarakenne oli helppo toteuttaa. Monimutkaisempi luokkarakenne olisi varmasti ollut tyylikkäämpi ja enemmän ohjelmistosuunnittelun periaatteiden mukainen, mutta mielestäni tässä ohjelmassa yksinkertaisempikin versio on siedettävä. 
+
+
+
+Ohjelman aikavaativuutta on vähän hölmä analysoida, koska suurin työ on aina tiedoston lukemisessa ja kirjoittamisessa. Se kestää niin pitkään, että muiden osien kuluttaman ajan merkitys jää aika olemattomaksi. Yhden huffman-puun tekeminen tapahtuu kuitenkin ajassa O(n log n). (n = aakkoston merkkien määrä) Logaritmikerroin tulee siitä, että merkit järjestetään käyttäen kekoa, jonka operaatiot toimivat ajassa log(n).
+
+Koska ohjelmani tekee jokaiselle merkille oman huffman-puun, tulee huffman-puiden rakentamisen aikavaativuudeksi siis pahimmassa tapauksessa O(nˆ2 log n). Mutta jälleen, algoritmin kokonaissuoritusajasta puiden rakentaminen on niin häviävän pieni osa, että tätä lisäystä ei edes huomaa, varsinkin kun merkkien määrä on melko pieni. 
