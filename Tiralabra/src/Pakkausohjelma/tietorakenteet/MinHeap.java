@@ -40,7 +40,9 @@ public class MinHeap <T> {
      * @return 
      */
     public T getMin(){
-        
+        if(loppu == 0){
+            return null;
+        }
         T palautus = heap[0];
         heap[0] = heap[loppu-1];
         int indeksi = 1;

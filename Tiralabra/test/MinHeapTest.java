@@ -104,5 +104,13 @@ public class MinHeapTest {
         assertTrue(heap.getMin() == 921);
         assertTrue(heap.size() == 0);
     }
+    @Test
+    public void lisaysJaPoistoTyhjiin(){
+        heap.add(888);
+        heap.add(2);
+        assertTrue(heap.getMin() == 2);
+        assertTrue(heap.getMin() == 888);
+        assertTrue(heap.getMin() == null);
+    }
     
 }
