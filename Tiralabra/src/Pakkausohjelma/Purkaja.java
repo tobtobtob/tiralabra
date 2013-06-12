@@ -4,6 +4,7 @@ package Pakkausohjelma;
 import Pakkausohjelma.tietorakenteet.HashTable;
 import Pakkausohjelma.tietorakenteet.Node;
 import Pakkausohjelma.tietorakenteet.Queue;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,13 +36,14 @@ public class Purkaja {
      * @throws IOException 
      */
     public void puraTiedosto(String tiedosto, String uusinimi, String aakkosto) throws FileNotFoundException, IOException{
-        FileInputStream lukija = new FileInputStream(new File(tiedosto));
+        FileInputStream apu = new FileInputStream(new File(tiedosto));
+        DataInputStream lukija = new DataInputStream(apu);
         char valimerkki = 19;
         Node node;
         sanakirja = luePuut(aakkosto, valimerkki, lukija); 
-        char edellinen = Character.toChars(lukija.read())[0];
+        char edellinen = lukija.readChar();
         
-        puskuri =  (byte) lukija.read();
+        puskuri =  lukija.readByte();
         indeksi = 7;
         fw = new FileWriter(new File(uusinimi));
          fw.write(edellinen);
@@ -50,7 +52,7 @@ public class Purkaja {
            node = sanakirja.get(edellinen);
            while(node.oikea != null){
                if(indeksi<0){
-                   puskuri = (byte) lukija.read();
+                   puskuri = lukija.readByte();
                    
                    indeksi = 7;
                }
@@ -79,24 +81,24 @@ public class Purkaja {
      * @return
      * @throws FileNotFoundException 
      */
-    public HashTable<Character, Node> luePuut(String aakkosto,char tyhjaNode, FileInputStream lukija) throws FileNotFoundException, IOException{
+    public HashTable<Character, Node> luePuut(String aakkosto,char tyhjaNode, DataInputStream lukija) throws FileNotFoundException, IOException{
         System.out.println("luetaan sanakirjaa...");
         HashTable<Character, Node> puut= new HashTable<>(100);
         while(true){
             
-            char c = (char) lukija.read();
+            char c = lukija.readChar();
             if( c == tyhjaNode){
                 break;
             }
-            Node n = new Node((char)lukija.read(), 0);
+            Node n = new Node(lukija.readChar(), 0);
             puut.put(c, n);
             Queue<Node> jono = new Queue<>();
             jono.enQueue(n);
             while(!jono.isEmpty()){
                 Node node = jono.deQueue();
                 if(node.merkki == tyhjaNode){
-                    Node vasen = new Node((char) lukija.read(), 0);
-                    Node oikea = new Node((char) lukija.read(), 0);
+                    Node vasen = new Node(lukija.readChar(), 0);
+                    Node oikea = new Node(lukija.readChar(), 0);
                     node.oikea = oikea;
                     node.vasen = vasen;
                     jono.enQueue(vasen);
@@ -105,8 +107,8 @@ public class Purkaja {
             }
             
         }
-        Object[] keys = puut.keySet();
-        System.out.println(keys.length);
+        
+       
         return puut;
     }
 }

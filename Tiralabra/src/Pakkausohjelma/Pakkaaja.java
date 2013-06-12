@@ -4,10 +4,11 @@ package Pakkausohjelma;
 import Pakkausohjelma.tietorakenteet.HashTable;
 import Pakkausohjelma.tietorakenteet.Node;
 import Pakkausohjelma.tietorakenteet.Queue;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -19,7 +20,8 @@ import java.util.logging.Logger;
  */
 public class Pakkaaja {
     
-    private FileOutputStream fos;
+    private DataOutputStream dos;
+   
     private String tiedostonNimi;
     private HashTable<Character, HashTable<Character, String>> sanakirja;
     private byte puskuri;
@@ -41,7 +43,8 @@ public class Pakkaaja {
      * @throws FileNotFoundException 
      */
     public void pakkaaTiedosto(String vanhaNimi, String uusiNimi) throws FileNotFoundException{
-        fos = new FileOutputStream(uusiNimi);
+        
+        dos = new DataOutputStream(new FileOutputStream(uusiNimi));
         tiedostonNimi = uusiNimi;
         HashTable<Character, HashTable<Character, Integer>> aakkosto = lueTiedosto(vanhaNimi); 
         puut = rakennaPuut();
@@ -53,7 +56,7 @@ public class Pakkaaja {
             luoSanakirja(puut.get((char)c), "",sanakirja.get((char)c) );
         }
         System.out.println("sanakirja luotu");
-        System.out.println(keyset.length);
+        
         try {
             
         
@@ -84,7 +87,7 @@ public class Pakkaaja {
         indeksi = 7;
         char edellinen = s.next().charAt(0);
         
-        fos.write(edellinen);
+        dos.writeChar(edellinen);
        
                 
         while(s.hasNext()){
@@ -93,9 +96,9 @@ public class Pakkaaja {
             edellinen = merkki;
         }
         
-        fos.write(puskuri);
+        dos.writeByte(puskuri);
         
-        fos.close();
+        dos.close();
     }
     /**
      * Lukee tiedoston läpi kirjaten jokaisen merkin esiintymiskerrat 
@@ -144,9 +147,9 @@ public class Pakkaaja {
     public  void luoSanakirja(Node node, String merkkijono, HashTable<Character, String> sanakirja){
         
         if(node.oikea == null){
-//            System.out.println(node.merkki + ": "+merkkijono);
+
             sanakirja.put(node.merkki, merkkijono);
-//            System.out.println(node.merkki + ": " +merkkijono);
+
             return;
         }
         luoSanakirja(node.vasen, merkkijono+"1", sanakirja);
@@ -167,8 +170,7 @@ public class Pakkaaja {
             kirjoitaBitti(c);
         }
         }catch(Exception e){
-            System.out.println("aa");
-            System.out.println(merkki + " " + edellinen);
+            
         }
     }
     /**
@@ -184,7 +186,7 @@ public class Pakkaaja {
         }
         indeksi--;
         if(indeksi < 0){
-            fos.write(puskuri);
+            dos.writeByte(puskuri);
             puskuri = 0;
             indeksi = 7;
         }
@@ -200,27 +202,27 @@ public class Pakkaaja {
     public void kirjoitaAakkostoTiedostoon(HashTable<Character, Node> aakkosto, char valimerkki) throws IOException{
        
         Object[] keyset = aakkosto.keySet();
-        System.out.println(keyset.length);
+        
         for (Object merkki : keyset) {
             
-            fos.write((char) merkki);
+            dos.writeChar((char) merkki);
             Queue<Node> jono = new Queue<>();
             jono.enQueue(aakkosto.get((char) merkki));
             while(!jono.isEmpty()){
                 Node n = jono.deQueue();
                 if(n.vasen != null){
-                    fos.write(valimerkki);
+                    dos.writeChar(valimerkki);
                     jono.enQueue(n.vasen);
                     jono.enQueue(n.oikea);
                     
                 }
                 else{
-                fos.write(n.merkki);
+                dos.writeChar(n.merkki);
                 }
                 
             }           
         }
-        fos.write(valimerkki);
+        dos.writeChar(valimerkki);
         
     }
     /**
