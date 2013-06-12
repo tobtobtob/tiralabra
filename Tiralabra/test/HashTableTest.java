@@ -91,4 +91,29 @@ public class HashTableTest {
         assertFalse(table.containsKey('y'));
         assertTrue(table.containsKey('å'));
     }
+    @Test
+    public void isoContainsKeyTesti(){
+        table.put('o', 6);
+        table.put('i', 6);
+        table.put('u', 6);
+        table.put('y', 6);
+        table.put('t', 6);
+        table.put('r', 6);
+        table.put('e', 6);
+        table.put('w', 6);
+        table.put('q', 6);
+        table.put('a', 6);
+        table.put('s', 6);
+        table.put('d', 6);
+        table.put('f', 6);
+        table.put('g', 6);
+        table.put('h', 6);
+        table.put('j', 6);
+        table.put('k', 6);
+        table.put('l', 6);
+        assertTrue(table.containsKey('o'));
+        assertTrue(table.containsKey('q'));
+        assertFalse(table.containsKey('m'));
+        assertTrue(table.containsKey('w'));
+    }
 }

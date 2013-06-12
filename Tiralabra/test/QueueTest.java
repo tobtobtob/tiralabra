@@ -38,6 +38,7 @@ public class QueueTest {
         assertEquals(1,q.deQueue());
         assertEquals(5, q.deQueue());
         assertEquals(700, q.deQueue());
+        assertTrue(q.isEmpty());
     }
     @Test
     public void tyhjastaJonostaPoisto(){

@@ -53,6 +53,7 @@ public class Pakkaaja {
             luoSanakirja(puut.get((char)c), "",sanakirja.get((char)c) );
         }
         System.out.println("sanakirja luotu");
+        System.out.println(keyset.length);
         try {
             
         
@@ -74,7 +75,7 @@ public class Pakkaaja {
         
         System.out.println("kirjoitetaan pakattu tiedosto...");
         
-        String valimerkki = "¤";
+        char valimerkki = 19;
         kirjoitaAakkostoTiedostoon(puut, valimerkki);
         Scanner s = new Scanner(new File(tiedosto));
         
@@ -196,10 +197,10 @@ public class Pakkaaja {
      * @param valimerkki merkki, joka ei sisälly tiedoston aakkostoon.
      * @throws IOException 
      */
-    public void kirjoitaAakkostoTiedostoon(HashTable<Character, Node> aakkosto, String valimerkki) throws IOException{
+    public void kirjoitaAakkostoTiedostoon(HashTable<Character, Node> aakkosto, char valimerkki) throws IOException{
        
         Object[] keyset = aakkosto.keySet();
-        
+        System.out.println(keyset.length);
         for (Object merkki : keyset) {
             
             fos.write((char) merkki);
@@ -208,7 +209,7 @@ public class Pakkaaja {
             while(!jono.isEmpty()){
                 Node n = jono.deQueue();
                 if(n.vasen != null){
-                    fos.write((char) valimerkki.charAt(0));
+                    fos.write(valimerkki);
                     jono.enQueue(n.vasen);
                     jono.enQueue(n.oikea);
                     
@@ -219,7 +220,7 @@ public class Pakkaaja {
                 
             }           
         }
-        fos.write(valimerkki.charAt(0));
+        fos.write(valimerkki);
         
     }
     /**

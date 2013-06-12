@@ -16,8 +16,8 @@ public class Pakkausohjelma {
         else if ("pakkaa".equals(komento)){
             System.out.println("anna pakattavan tiedoston nimi:");
             String pakattava = s. nextLine();
-            System.out.println("anna pakatun tiedoston nimi:");
-            String pakattu = s.nextLine();
+            
+            String pakattu = pakattava +".pakattu";
             try {
                 new Pakkaaja().pakkaaTiedosto(pakattava, pakattu);
             } catch (FileNotFoundException ex) {
@@ -27,8 +27,8 @@ public class Pakkausohjelma {
         else if("pura".equals(komento)){
             System.out.println("anna purettavan tiedoston nimi:");
             String purettava = s. nextLine();
-            System.out.println("anna puretun tiedoston nimi:");
-            String purettu = s.nextLine();
+            
+            String purettu = purettava+".purettu";
             try {
                 new Purkaja().puraTiedosto(purettava, purettu, "aakkosto.txt");
             } catch (Exception ex) {

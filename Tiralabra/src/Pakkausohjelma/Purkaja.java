@@ -9,7 +9,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 
 /**
@@ -37,9 +36,9 @@ public class Purkaja {
      */
     public void puraTiedosto(String tiedosto, String uusinimi, String aakkosto) throws FileNotFoundException, IOException{
         FileInputStream lukija = new FileInputStream(new File(tiedosto));
-        char valimerkki = '¤';
+        char valimerkki = 19;
         Node node;
-        sanakirja = luePuut(aakkosto, valimerkki, lukija); //kovakoodattu välimerkki pitää muuttaa järkevämmäksi
+        sanakirja = luePuut(aakkosto, valimerkki, lukija); 
         char edellinen = Character.toChars(lukija.read())[0];
         
         puskuri =  (byte) lukija.read();
@@ -83,8 +82,6 @@ public class Purkaja {
     public HashTable<Character, Node> luePuut(String aakkosto,char tyhjaNode, FileInputStream lukija) throws FileNotFoundException, IOException{
         System.out.println("luetaan sanakirjaa...");
         HashTable<Character, Node> puut= new HashTable<>(100);
-//        Scanner s = new Scanner(new File(aakkosto));
-//        s.useDelimiter("");
         while(true){
             
             char c = (char) lukija.read();
@@ -108,6 +105,8 @@ public class Purkaja {
             }
             
         }
+        Object[] keys = puut.keySet();
+        System.out.println(keys.length);
         return puut;
     }
 }
