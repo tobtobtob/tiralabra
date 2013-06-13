@@ -1,4 +1,4 @@
-package Pakkausohjelma;
+öackage Pakkausohjelma;
 
 import Pakkausohjelma.tietorakenteet.Node;
 import java.io.File;

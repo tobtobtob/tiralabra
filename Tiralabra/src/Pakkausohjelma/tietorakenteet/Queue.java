@@ -12,7 +12,10 @@ public class Queue<T> {
     
     private Node<T> alku;
     private Node<T> loppu;
-    
+    /**
+     * Jonon sisäluokka on yksi jonon alkio
+     * @param <Type> jonon alkioiden tyyppi
+     */
     private class Node<Type>{
         Node<Type> next;
         Type value;
